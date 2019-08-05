@@ -9,7 +9,7 @@ class WelcomeNavigation extends Navigation {
     Navigation.gotoRoute(
         context,
         ContentRoute.routeName,
-        new RouteArguments('First', data)
+        new RouteArguments('Contractos', data)
     );
   }
 
@@ -17,7 +17,7 @@ class WelcomeNavigation extends Navigation {
     Navigation.gotoRoute(
         context,
         ContentRoute.routeName,
-        new RouteArguments('Second', data)
+        new RouteArguments('Anuncios', data)
     );
   }
 }

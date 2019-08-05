@@ -11,6 +11,7 @@ class Contrato {
   String _precio;
   String _fecha_hasta;
   String _link;
+  List<String> _tags;
 
   Contrato(contrato) {
     _id = contrato['id'];
@@ -25,6 +26,7 @@ class Contrato {
     _precio = contrato['precio'];
     _fecha_hasta = contrato['fecha_hasta'];
     _link = contrato['link'];
+    _tags = [contrato['type']];
   }
 
   int get id => _id;
@@ -39,4 +41,5 @@ class Contrato {
   String get precio => _precio;
   String get fecha_hasta => _fecha_hasta;
   String get link => _link;
+  List<String> get tags => _tags;
 }

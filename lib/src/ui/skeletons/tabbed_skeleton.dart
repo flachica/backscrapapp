@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TabbedSkeleton extends StatelessWidget {
   final String title;
   final List<Widget> tabPages;
   final List<Tab> tabBar;
+  final int index;
 
-  TabbedSkeleton({this.title, this.tabPages, this.tabBar});
+  TabbedSkeleton({this.title, this.tabPages, this.tabBar, this.index});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: this.index,
       length: this.tabPages.length,
       child: Scaffold(
         appBar: AppBar(

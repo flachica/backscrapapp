@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class TwoColumnRow extends StatelessWidget {
+class TwoColumnSection extends StatelessWidget {
   final String title;
   final String firstText;
   final String secondText;
 
-  TwoColumnRow({this.title, this.firstText, this.secondText});
+  TwoColumnSection({this.title, this.firstText, this.secondText});
 
   @override
   Widget build(BuildContext context) {

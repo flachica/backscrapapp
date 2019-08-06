@@ -8,7 +8,7 @@ class App extends StatelessWidget {
     return MaterialApp(
         routes: {
           WelcomeRoute.routeName: (context) => WelcomeRoute(),
-          ContentRoute.routeName: (context) => ContentRoute(),
+          ContentRoute.routeName: (context) => ContentRoute(context),
         },
     );
   }

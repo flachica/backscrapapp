@@ -3,11 +3,14 @@ import 'package:backscrapapp/src/tools/metadata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/contrato_item.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/anuncio_item.dart';
+import 'package:backscrapapp/src/models/alldata_model.dart';
+import 'package:backscrapapp/src/models/anuncio_model.dart';
+import 'package:backscrapapp/src/models/contrato_model.dart';
 
 class ContentRoute extends StatefulWidget {
   static const routeName = '/content';
   int index;
-  dynamic data;
+  AllDataModel data;
 
   ContentRoute(BuildContext context) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
@@ -24,10 +27,110 @@ class ContentRoute extends StatefulWidget {
 
 class ContentRouteState extends State<ContentRoute> {
 
+  bool _isSearching = false;
+
+  TextEditingController _searchQuery;
+  List<Anuncio> anuncios;
+  List<Contrato> contratos;
+
   @override
   void initState() {
+    _searchQuery = new TextEditingController();
+    this.anuncios = widget.data.anuncios;
+    this.contratos = widget.data.contratos;
     super.initState();
   }
+
+  Widget _buildSearchField() {
+    return new TextField(
+      controller: _searchQuery,
+      autofocus: true,
+      decoration: const InputDecoration(
+        hintText: 'Criterio de búsqueda...',
+        border: InputBorder.none,
+        hintStyle: const TextStyle(color: Colors.white30),
+      ),
+      style: const TextStyle(color: Colors.white, fontSize: 16.0),
+      onChanged: updateSearchQuery,
+    );
+  }
+
+  void updateSearchQuery(String newQuery) {
+    //TODO: En el manual no se filtra el mismo modelo de datos que este
+    //DE: https://github.com/DeveloperLibs/flutter_list_filter/blob/master/lib/home.dart
+    this.anuncios = widget.data.anuncios.where((anuncio) => anuncio.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
+    this.contratos = widget.data.contratos.where((contrato) => contrato.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
+
+    setState(() {});
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchQuery.clear();
+      updateSearchQuery('');
+    });
+  }
+
+
+  Widget _buildTitle(BuildContext context) {
+    var horizontalTitleAlignment = CrossAxisAlignment.start;
+
+    return new InkWell(
+      child: new Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: horizontalTitleAlignment,
+          children: <Widget>[
+            new Text('La Rinconada',
+              style: new TextStyle(color: Colors.white),),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _startSearch() {
+    ModalRoute.of(context)
+        .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        new IconButton(
+          icon: const Icon(Icons.clear,color: Colors.white,),
+          onPressed: () {
+            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+
+    return <Widget>[
+      new IconButton(
+        icon: const Icon(Icons.search,color: Colors.white,),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +140,9 @@ class ContentRouteState extends State<ContentRoute> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('La Rinconada'),),
+          leading: _isSearching ? new BackButton( color: Colors.white,) : null,
+          title: _isSearching ? _buildSearchField() : _buildTitle(context),
+          actions: _buildActions(),
           backgroundColor: Colors.blueAccent,
           bottom: TabBar(
             tabs: <Tab>[
@@ -49,15 +154,15 @@ class ContentRouteState extends State<ContentRoute> {
         body: TabBarView(
             children: <Widget>[
               ListView.builder(
-                  itemCount: widget.data.contratos.length,
+                  itemCount: this.contratos.length,
                   itemBuilder: (context, index) {
-                    return ContratoItem(contrato: widget.data.contratos[index]);
+                    return ContratoItem(contrato: this.contratos[index]);
                   }
               ),
               ListView.builder(
-                  itemCount: widget.data.anuncios.length,
+                  itemCount: this.anuncios.length,
                   itemBuilder: (context, index) {
-                    return AnuncioItem(anuncio: widget.data.anuncios[index],);
+                    return AnuncioItem(anuncio: this.anuncios[index],);
                   }
               ),
             ]

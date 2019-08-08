@@ -10,6 +10,8 @@ class AllDataModel {
   List<Anuncio> _anuncios = [];
   List<Contrato> _contratos = [];
 
+  AllDataModel(): super();
+
   AllDataModel.fromJSON(Map<String, dynamic> parsedJSON) {
     for (Map<String, dynamic> item in parsedJSON['anuncios']) {
       PestanaAnuncios _pestanaAnuncio = new PestanaAnuncios(item);

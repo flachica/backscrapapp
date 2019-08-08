@@ -108,16 +108,13 @@ class ContentRouteState extends State<ContentRoute> {
   }
 
   List<Widget> _buildActions() {
-    if (_isSearching) {
+    if (_isSearching == true) {
       return <Widget>[
         new IconButton(
           icon: const Icon(Icons.clear,color: Colors.white,),
           onPressed: () {
-            if (_searchQuery == null || _searchQuery.text.isEmpty) {
-              Navigator.pop(context);
-              return;
-            }
             _clearSearchQuery();
+            Navigator.pop(context);
           },
         ),
       ];

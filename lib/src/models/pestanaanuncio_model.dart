@@ -16,8 +16,16 @@ class PestanaAnuncios {
     }
   }
 
+  PestanaAnuncios.newPestana(String nombre, int index, int cantidad) {
+    this._nombre = nombre;
+    this._index = index;
+    this._cantidad = cantidad;
+  }
+
   String get nombre => _nombre;
   List<Anuncio> get anuncios => _anuncios;
   int get index => _index;
   int get cantidad => _cantidad;
+
+  set anuncios (anuncios) => this._anuncios = anuncios;
 }

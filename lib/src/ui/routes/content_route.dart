@@ -3,22 +3,21 @@ import 'package:backscrapapp/src/tools/metadata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/contrato_item.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/anuncio_item.dart';
-import 'package:backscrapapp/src/models/alldata_model.dart';
-import 'package:backscrapapp/src/models/anuncio_model.dart';
+import 'package:backscrapapp/src/models/pestanacontratante_model.dart';
+import 'package:backscrapapp/src/models/pestanaanuncio_model.dart';
 import 'package:backscrapapp/src/models/contrato_model.dart';
+import 'package:backscrapapp/src/models/anuncio_model.dart';
+import 'package:backscrapapp/src/ui/widgets/drawer_list.dart';
 
 class ContentRoute extends StatefulWidget {
   static const routeName = '/content';
-  int index;
-  AllDataModel data;
+  List<PestanaContratante> contratantes;
+  List<PestanaAnuncios> anuncios;
 
   ContentRoute(BuildContext context) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
-    data = arguments.data;
-    this.index = 0;
-    if (arguments.fromName == 'Anuncios') {
-      index = 1;
-    }
+    contratantes = arguments.contratantes;
+    anuncios = arguments.anuncios;
   }
 
   @override
@@ -26,18 +25,17 @@ class ContentRoute extends StatefulWidget {
 }
 
 class ContentRouteState extends State<ContentRoute> {
-
   bool _isSearching = false;
 
   TextEditingController _searchQuery;
-  List<Anuncio> anuncios;
-  List<Contrato> contratos;
+  List<PestanaContratante> contratantes;
+  List<PestanaAnuncios> anuncios;
 
   @override
   void initState() {
     _searchQuery = new TextEditingController();
-    this.anuncios = widget.data.anuncios;
-    this.contratos = widget.data.contratos;
+    this.contratantes = widget.contratantes;
+    this.anuncios = widget.anuncios;
     super.initState();
   }
 
@@ -56,10 +54,28 @@ class ContentRouteState extends State<ContentRoute> {
   }
 
   void updateSearchQuery(String newQuery) {
-    //TODO: En el manual no se filtra el mismo modelo de datos que este
-    //DE: https://github.com/DeveloperLibs/flutter_list_filter/blob/master/lib/home.dart
-    this.anuncios = widget.data.anuncios.where((anuncio) => anuncio.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
-    this.contratos = widget.data.contratos.where((contrato) => contrato.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
+    if (widget.contratantes != null) {
+      this.contratantes = new List<PestanaContratante>();
+      for (PestanaContratante pestanaContrato in widget.contratantes) {
+        List<Contrato> items = pestanaContrato.contratos.where((contrato) =>
+            contrato.name.toUpperCase().contains(newQuery.toUpperCase()))
+            .toList();
+        PestanaContratante newContratante = new PestanaContratante.newPestana(
+            pestanaContrato.nombre, pestanaContrato.index, items.length);
+        newContratante.contratos = items;
+        this.contratantes.add(newContratante);
+      }
+    }
+
+    if (widget.anuncios != null) {
+      this.anuncios = new List<PestanaAnuncios>();
+      for (PestanaAnuncios pestanaAnuncio in widget.anuncios) {
+        List<Anuncio> items = pestanaAnuncio.anuncios.where((contrato) => contrato.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
+        PestanaAnuncios newAnuncio = new PestanaAnuncios.newPestana(pestanaAnuncio.nombre, pestanaAnuncio.index, pestanaAnuncio.cantidad);
+        newAnuncio.anuncios = items;
+        this.anuncios.add(newAnuncio);
+      }
+    }
 
     setState(() {});
   }
@@ -70,7 +86,6 @@ class ContentRouteState extends State<ContentRoute> {
       updateSearchQuery('');
     });
   }
-
 
   Widget _buildTitle(BuildContext context) {
     var horizontalTitleAlignment = CrossAxisAlignment.start;
@@ -114,9 +129,8 @@ class ContentRouteState extends State<ContentRoute> {
           icon: const Icon(Icons.clear,color: Colors.white,),
           onPressed: () {
             _clearSearchQuery();
-            Navigator.pop(context);
           },
-        ),
+        )
       ];
     }
 
@@ -131,10 +145,33 @@ class ContentRouteState extends State<ContentRoute> {
 
   @override
   Widget build(BuildContext context) {
+    List<Tab> tabs = new List<Tab>();
+    List<Widget> contentTabs = new List<Widget>();
+
+    if (this.contratantes != null && this.contratantes.length > 0) {
+      for (PestanaContratante pestanaContratante in this.contratantes) {
+        tabs.add(Tab(icon: Icon(FontAwesomeIcons.fileContract), text: pestanaContratante.nombre));
+        contentTabs.add(ListView.builder(
+            itemCount: pestanaContratante.contratos.length,
+            itemBuilder: (context, index) {
+              return ContratoItem(contrato: pestanaContratante.contratos[index]);
+            }
+        ));
+      }
+    } else if (this.anuncios != null && this.anuncios.length > 0) {
+      for (PestanaAnuncios pestanaAnuncios in this.anuncios) {
+        tabs.add(Tab(icon: Icon(FontAwesomeIcons.newspaper), text: pestanaAnuncios.nombre));
+        contentTabs.add(ListView.builder(
+            itemCount: pestanaAnuncios.anuncios.length,
+            itemBuilder: (context, index) {
+              return AnuncioItem(anuncio: pestanaAnuncios.anuncios[index]);
+            }
+        ));
+      }
+    }
 
     return DefaultTabController(
-      initialIndex: widget.index,
-      length: 2,
+      length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
           leading: _isSearching ? new BackButton( color: Colors.white,) : null,
@@ -142,28 +179,14 @@ class ContentRouteState extends State<ContentRoute> {
           actions: _buildActions(),
           backgroundColor: Colors.blueAccent,
           bottom: TabBar(
-            tabs: <Tab>[
-              Tab(icon: Icon(FontAwesomeIcons.fileContract), text: 'Contratos'),
-              Tab(icon: Icon(FontAwesomeIcons.newspaper), text: 'Anuncios')
-            ],
+            tabs: tabs,
+            isScrollable: true,
           ),
         ),
         body: TabBarView(
-            children: <Widget>[
-              ListView.builder(
-                  itemCount: this.contratos.length,
-                  itemBuilder: (context, index) {
-                    return ContratoItem(contrato: this.contratos[index]);
-                  }
-              ),
-              ListView.builder(
-                  itemCount: this.anuncios.length,
-                  itemBuilder: (context, index) {
-                    return AnuncioItem(anuncio: this.anuncios[index],);
-                  }
-              ),
-            ]
+            children: contentTabs
         ),
+        drawer: DrawerApp(),
       ),
     );
   }

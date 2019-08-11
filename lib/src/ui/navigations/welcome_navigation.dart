@@ -9,7 +9,7 @@ class WelcomeNavigation extends Navigation {
     Navigation.gotoRoute(
         context,
         ContentRoute.routeName,
-        new RouteArguments('Contractos', data)
+        new RouteArguments(fromName: 'Contratos', contratantes: data.pestanaContratante)
     );
   }
 
@@ -17,7 +17,7 @@ class WelcomeNavigation extends Navigation {
     Navigation.gotoRoute(
         context,
         ContentRoute.routeName,
-        new RouteArguments('Anuncios', data)
+        new RouteArguments(fromName: 'Anuncios', anuncios: data.pestanaAnuncios)
     );
   }
 }

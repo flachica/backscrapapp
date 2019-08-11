@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/tools/metadata.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/contrato_item.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/anuncio_item.dart';
 import 'package:backscrapapp/src/models/pestanacontratante_model.dart';
@@ -187,7 +186,7 @@ class ContentRouteState extends State<ContentRoute> {
         body: TabBarView(
             children: contentTabs
         ),
-        drawer: DrawerApp(),
+        drawer: DrawerApp(contratantes: widget.contratantes, anuncios: widget.anuncios,),
       ),
     );
   }

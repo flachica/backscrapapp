@@ -26,6 +26,7 @@ class ContentRoute extends StatefulWidget {
 
 class ContentRouteState extends State<ContentRoute> {
   bool _isSearching = false;
+  Tools tools = new Tools();
 
   TextEditingController _searchQuery;
   List<PestanaContratante> contratantes;
@@ -150,7 +151,7 @@ class ContentRouteState extends State<ContentRoute> {
 
     if (this.contratantes != null && this.contratantes.length > 0) {
       for (PestanaContratante pestanaContratante in this.contratantes) {
-        tabs.add(Tab(icon: Icon(FontAwesomeIcons.fileContract), text: pestanaContratante.nombre));
+        tabs.add(Tab(icon: tools.iconContratoByIndex(pestanaContratante.index), text: pestanaContratante.nombre));
         contentTabs.add(ListView.builder(
             itemCount: pestanaContratante.contratos.length,
             itemBuilder: (context, index) {
@@ -160,7 +161,7 @@ class ContentRouteState extends State<ContentRoute> {
       }
     } else if (this.anuncios != null && this.anuncios.length > 0) {
       for (PestanaAnuncios pestanaAnuncios in this.anuncios) {
-        tabs.add(Tab(icon: Icon(FontAwesomeIcons.newspaper), text: pestanaAnuncios.nombre));
+        tabs.add(Tab(icon: tools.iconAnuncioByIndex(pestanaAnuncios.index), text: pestanaAnuncios.nombre));
         contentTabs.add(ListView.builder(
             itemCount: pestanaAnuncios.anuncios.length,
             itemBuilder: (context, index) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/tools/metadata.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/contrato_item.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/anuncio_item.dart';
+import 'package:backscrapapp/src/models/alldata_model.dart';
 import 'package:backscrapapp/src/models/pestanacontratante_model.dart';
 import 'package:backscrapapp/src/models/pestanaanuncio_model.dart';
 import 'package:backscrapapp/src/models/contrato_model.dart';
@@ -10,32 +11,42 @@ import 'package:backscrapapp/src/ui/widgets/drawer_list.dart';
 
 class ContentRoute extends StatefulWidget {
   static const routeName = '/content';
-  List<PestanaContratante> contratantes;
-  List<PestanaAnuncios> anuncios;
+  String show;
+  AllDataModel data;
 
   ContentRoute(BuildContext context) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
-    contratantes = arguments.contratantes;
-    anuncios = arguments.anuncios;
+    if (arguments.data != null) data = arguments.data;
+    this.show = arguments.show;
+    if (this.show == null) this.show = 'contratante';
   }
 
   @override
-  ContentRouteState createState() => new ContentRouteState();
+  ContentRouteState createState() => new ContentRouteState(show: this.show);
 }
 
 class ContentRouteState extends State<ContentRoute> {
   bool _isSearching = false;
   Tools tools = new Tools();
+  String show;
 
   TextEditingController _searchQuery;
-  List<PestanaContratante> contratantes;
-  List<PestanaAnuncios> anuncios;
+  List<PestanaContratante> pestanaContratantes;
+  List<PestanaAnuncios> pestanaAnuncios;
+
+  ContentRouteState({this.show});
 
   @override
   void initState() {
     _searchQuery = new TextEditingController();
-    this.contratantes = widget.contratantes;
-    this.anuncios = widget.anuncios;
+    if (widget.data != null) {
+      if (show == null || show == 'contratante') {
+        this.pestanaContratantes = widget.data.pestanaContratante;
+      } else if (show == 'anuncios') {
+        this.pestanaAnuncios = widget.data.pestanaAnuncios;
+      }
+    }
+
     super.initState();
   }
 
@@ -54,26 +65,26 @@ class ContentRouteState extends State<ContentRoute> {
   }
 
   void updateSearchQuery(String newQuery) {
-    if (widget.contratantes != null) {
-      this.contratantes = new List<PestanaContratante>();
-      for (PestanaContratante pestanaContrato in widget.contratantes) {
+    if (show == 'contratantes' && widget.data.pestanaContratante != null) {
+      this.pestanaContratantes = new List<PestanaContratante>();
+      for (PestanaContratante pestanaContrato in widget.data.pestanaContratante) {
         List<Contrato> items = pestanaContrato.contratos.where((contrato) =>
             contrato.name.toUpperCase().contains(newQuery.toUpperCase()))
             .toList();
         PestanaContratante newContratante = new PestanaContratante.newPestana(
             pestanaContrato.nombre, pestanaContrato.index, items.length);
         newContratante.contratos = items;
-        this.contratantes.add(newContratante);
+        this.pestanaContratantes.add(newContratante);
       }
     }
 
-    if (widget.anuncios != null) {
-      this.anuncios = new List<PestanaAnuncios>();
-      for (PestanaAnuncios pestanaAnuncio in widget.anuncios) {
-        List<Anuncio> items = pestanaAnuncio.anuncios.where((contrato) => contrato.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
+    if (show == 'anuncios' && widget.data.pestanaAnuncios != null) {
+      this.pestanaAnuncios = new List<PestanaAnuncios>();
+      for (PestanaAnuncios pestanaAnuncio in widget.data.pestanaAnuncios) {
+        List<Anuncio> items = pestanaAnuncio.anuncios.where((anuncio) => anuncio.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
         PestanaAnuncios newAnuncio = new PestanaAnuncios.newPestana(pestanaAnuncio.nombre, pestanaAnuncio.index, pestanaAnuncio.cantidad);
         newAnuncio.anuncios = items;
-        this.anuncios.add(newAnuncio);
+        this.pestanaAnuncios.add(newAnuncio);
       }
     }
 
@@ -148,8 +159,8 @@ class ContentRouteState extends State<ContentRoute> {
     List<Tab> tabs = new List<Tab>();
     List<Widget> contentTabs = new List<Widget>();
 
-    if (this.contratantes != null && this.contratantes.length > 0) {
-      for (PestanaContratante pestanaContratante in this.contratantes) {
+    if (this.pestanaContratantes != null && this.pestanaContratantes.length > 0) {
+      for (PestanaContratante pestanaContratante in this.pestanaContratantes) {
         tabs.add(Tab(icon: tools.iconContratoByIndex(pestanaContratante.index), text: pestanaContratante.nombre));
         contentTabs.add(ListView.builder(
             itemCount: pestanaContratante.contratos.length,
@@ -158,8 +169,8 @@ class ContentRouteState extends State<ContentRoute> {
             }
         ));
       }
-    } else if (this.anuncios != null && this.anuncios.length > 0) {
-      for (PestanaAnuncios pestanaAnuncios in this.anuncios) {
+    } else if (this.pestanaAnuncios != null && this.pestanaAnuncios.length > 0) {
+      for (PestanaAnuncios pestanaAnuncios in this.pestanaAnuncios) {
         tabs.add(Tab(icon: tools.iconAnuncioByIndex(pestanaAnuncios.index), text: pestanaAnuncios.nombre));
         contentTabs.add(ListView.builder(
             itemCount: pestanaAnuncios.anuncios.length,
@@ -186,7 +197,7 @@ class ContentRouteState extends State<ContentRoute> {
         body: TabBarView(
             children: contentTabs
         ),
-        drawer: DrawerApp(contratantes: widget.contratantes, anuncios: widget.anuncios,),
+        drawer: DrawerApp(data: widget.data,),
       ),
     );
   }

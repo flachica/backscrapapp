@@ -23,41 +23,49 @@ class IconicGridTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox.fromSize(
-            size: Size.square(deviceSize.width / 2.5),
-            child: Card(
-              color: Colors.grey.shade300,
-              child: LabelBelowIcon(
-                betweenHeight: 15.0,
-                icon: firstIcon,
-                label: firstLabel,
-                iconColor: Colors.indigo.shade800,
-                onPressed: firstOnPressed,
+
+    return Column(
+      children: <Widget>[
+    Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
+    child: Text('Consulte toda la oferta pública del Ayuntamiento de La Rinconada ', softWrap: true, textAlign: TextAlign.justify,)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox.fromSize(
+                size: Size.square(deviceSize.width / 2.5),
+                child: Card(
+                  color: Colors.grey.shade300,
+                  child: LabelBelowIcon(
+                    betweenHeight: 15.0,
+                    icon: firstIcon,
+                    label: firstLabel,
+                    iconColor: Colors.indigo.shade800,
+                    onPressed: firstOnPressed,
+                  ),
+                ),
               ),
-            ),
-          ),
-          SizedBox.fromSize(
-            size: Size.square(deviceSize.width / 2.5),
-            child: Card(
-              color: Colors.grey.shade300,
-              child: LabelBelowIcon(
-                betweenHeight: 15.0,
-                icon: secondIcon,
-                label: secondLabel,
-                iconColor: Colors.indigo.shade800,
-                onPressed: secondOnPressed,
+              SizedBox.fromSize(
+                size: Size.square(deviceSize.width / 2.5),
+                child: Card(
+                  color: Colors.grey.shade300,
+                  child: LabelBelowIcon(
+                    betweenHeight: 15.0,
+                    icon: secondIcon,
+                    label: secondLabel,
+                    iconColor: Colors.indigo.shade800,
+                    onPressed: secondOnPressed,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }

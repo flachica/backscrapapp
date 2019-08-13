@@ -1,14 +1,11 @@
-import 'package:backscrapapp/src/models/pestanacontratante_model.dart';
-import 'package:backscrapapp/src/models/pestanaanuncio_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RouteArguments {
-  final String fromName;
-  final List<PestanaContratante> contratantes;
-  final List<PestanaAnuncios> anuncios;
+  final String show;
+  final dynamic data;
 
-  RouteArguments({this.fromName, this.contratantes, this.anuncios});
+  RouteArguments({this.show, this.data});
 }
 
 class Tools {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:backscrapapp/src/ui/routes/welcome_route.dart';
+import 'package:backscrapapp/src/ui/routes/initial_route.dart';
+import 'package:backscrapapp/src/ui/routes/ilustrating_route.dart';
 import 'package:backscrapapp/src/ui/routes/content_route.dart';
 
 class App extends StatelessWidget {
@@ -7,7 +8,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         routes: {
-          WelcomeRoute.routeName: (context) => WelcomeRoute(),
+          InitialRoute.routeName: (context) => InitialRoute(),
+          IlustratingRoute.routeName: (context) => IlustratingRoute(),
           ContentRoute.routeName: (context) => ContentRoute(context),
         },
     );

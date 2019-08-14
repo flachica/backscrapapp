@@ -37,6 +37,12 @@ class DrawerApp extends StatelessWidget {
                 Navigator.pop(context);
                 Router.gotoIlustrating(context, RouteArguments(data: this.data));
               }),
+          ListTile(
+              title: Text('Acerca de'),
+              onTap: () {
+                Navigator.pop(context);
+                Router.gotoAboutus(context);
+              }),
         ],
       ),
     );

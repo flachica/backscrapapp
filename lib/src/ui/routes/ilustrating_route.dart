@@ -9,6 +9,12 @@ import 'package:backscrapapp/src/tools/metadata.dart';
 
 class IlustratingRoute extends StatefulWidget {
   static const routeName = '/ilustrating';
+  AllDataModel data;
+
+  IlustratingRoute(BuildContext context) {
+    RouteArguments arguments = ModalRoute.of(context).settings.arguments;
+    this.data = arguments.data;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -20,38 +26,52 @@ class IlustratingState extends State<IlustratingRoute> {
   @override
   void initState() {
     super.initState();
-    bloc.fetchPestanaAnuncios();
+    if (widget.data == null) {
+      bloc.fetchPestanaAnuncios();
+    }
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    if (widget.data == null) {
+      bloc.dispose();
+    }
     super.dispose();
   }
 
-  StreamBuilder<AllDataModel> streamBuilder = StreamBuilder(
-      stream: bloc.fetchAllData,
-      builder: (context, AsyncSnapshot<AllDataModel> snapshot) {
-        bool loading = true;
-
-        if (snapshot.hasData) {
-          loading = false;
-        }
-
-        return DefaultTabController(
-          length: 3,
-          child: IlustratingPager(loading: loading, data: snapshot.data),
-        );
-      });
-
   @override
   Widget build(BuildContext context) {
-    return MainSkeleton(
-      body: streamBuilder,
-      appBar: AppBar(
-        title: Text('Backscrap'),
-      )
-    );
+    if (widget.data == null) {
+      return MainSkeleton(
+          body: StreamBuilder(
+              stream: bloc.fetchAllData,
+              builder: (context, AsyncSnapshot<AllDataModel> snapshot) {
+                bool loading = true;
+
+                if (snapshot.hasData) {
+                  loading = false;
+                }
+
+                return DefaultTabController(
+                  length: 3,
+                  child: IlustratingPager(loading: loading, data: snapshot.data),
+                );
+              }),
+          appBar: AppBar(
+            title: Text('Backscrap'),
+          )
+      );
+    } else {
+      return MainSkeleton(
+          body: DefaultTabController(
+            length: 3,
+            child: IlustratingPager(loading: false, data: widget.data),
+          ),
+          appBar: AppBar(
+            title: Text('Backscrap'),
+          )
+      );
+    }
   }
 }
 

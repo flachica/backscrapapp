@@ -29,7 +29,7 @@ class InitialState extends State<InitialRoute> {
     setState(() {
       _ilustratingViewed = (prefs.getBool('ilustratingViewed') ?? false);
       if (!_ilustratingViewed) {
-        Router.gotoIlustrating(context);
+        Router.gotoIlustrating(context, null);
       } else {
         _loadAndShowContent();
       }

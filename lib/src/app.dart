@@ -9,7 +9,7 @@ class App extends StatelessWidget {
     return MaterialApp(
         routes: {
           InitialRoute.routeName: (context) => InitialRoute(),
-          IlustratingRoute.routeName: (context) => IlustratingRoute(),
+          IlustratingRoute.routeName: (context) => IlustratingRoute(context),
           ContentRoute.routeName: (context) => ContentRoute(context),
         },
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/ui/routes/content_route.dart';
+import 'package:backscrapapp/src/ui/routes/ilustrating_route.dart';
 import 'package:backscrapapp/src/tools/metadata.dart';
 
 class Router {
@@ -8,14 +9,10 @@ class Router {
   }
 
   static gotoContent(BuildContext context, RouteArguments args) {
-    gotoRoute(
-        context,
-        ContentRoute.routeName,
-        args
-    );
+    gotoRoute(context, ContentRoute.routeName, args);
   }
 
-  static gotoIlustrating(BuildContext context) {
-    gotoRoute(context, '/ilustrating', null);
+  static gotoIlustrating(BuildContext context, RouteArguments args) {
+    gotoRoute(context, IlustratingRoute.routeName, args);
   }
 }

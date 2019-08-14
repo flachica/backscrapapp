@@ -43,3 +43,6 @@ class Tools {
   }
 
 }
+
+const CONTRATANTE_SHOW = 'contratante';
+const ANUNCIOS_SHOW = 'anuncios';

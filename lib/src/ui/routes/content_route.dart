@@ -11,6 +11,7 @@ import 'package:backscrapapp/src/ui/widgets/drawer_list.dart';
 
 class ContentRoute extends StatefulWidget {
   static const routeName = '/content';
+
   String show;
   AllDataModel data;
 
@@ -18,7 +19,7 @@ class ContentRoute extends StatefulWidget {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
     if (arguments.data != null) data = arguments.data;
     this.show = arguments.show;
-    if (this.show == null) this.show = 'contratante';
+    if (this.show == null) this.show = CONTRATANTE_SHOW;
   }
 
   @override
@@ -40,9 +41,9 @@ class ContentRouteState extends State<ContentRoute> {
   void initState() {
     _searchQuery = new TextEditingController();
     if (widget.data != null) {
-      if (show == null || show == 'contratante') {
+      if (show == null || show == CONTRATANTE_SHOW) {
         this.pestanaContratantes = widget.data.pestanaContratante;
-      } else if (show == 'anuncios') {
+      } else if (show == ANUNCIOS_SHOW) {
         this.pestanaAnuncios = widget.data.pestanaAnuncios;
       }
     }
@@ -65,7 +66,7 @@ class ContentRouteState extends State<ContentRoute> {
   }
 
   void updateSearchQuery(String newQuery) {
-    if (show == 'contratantes' && widget.data.pestanaContratante != null) {
+    if (show == CONTRATANTE_SHOW && widget.data.pestanaContratante != null) {
       this.pestanaContratantes = new List<PestanaContratante>();
       for (PestanaContratante pestanaContrato in widget.data.pestanaContratante) {
         List<Contrato> items = pestanaContrato.contratos.where((contrato) =>
@@ -78,7 +79,7 @@ class ContentRouteState extends State<ContentRoute> {
       }
     }
 
-    if (show == 'anuncios' && widget.data.pestanaAnuncios != null) {
+    if (show == ANUNCIOS_SHOW && widget.data.pestanaAnuncios != null) {
       this.pestanaAnuncios = new List<PestanaAnuncios>();
       for (PestanaAnuncios pestanaAnuncio in widget.data.pestanaAnuncios) {
         List<Anuncio> items = pestanaAnuncio.anuncios.where((anuncio) => anuncio.name.toUpperCase().contains(newQuery.toUpperCase())).toList();

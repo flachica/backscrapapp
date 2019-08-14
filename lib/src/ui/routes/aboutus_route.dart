@@ -35,12 +35,13 @@ class AboutusRoute extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 15),
-                          child: Text('por Fernando La Chica')),
                     ],
                   ),
                 ),
+                  Padding(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: Text('por Fernando La Chica')
+                  ),
               RaisedButton(
                 child: Text(
                   'Perfil web',

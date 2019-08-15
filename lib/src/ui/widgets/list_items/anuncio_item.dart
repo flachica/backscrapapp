@@ -18,6 +18,8 @@ class AnuncioItem extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              OneColumnSection(title: 'Identificador', text: anuncio.identificador,),
+              OneColumnSection(title: 'Contenido', text: anuncio.contenido,),
               TwoColumnSection(title: 'Fecha', firstText: anuncio.fecha_desde, secondText: anuncio.fecha_hasta,),
               OneColumnSection(title: 'Tipo', text: anuncio.pestana,),
               CenterButtonSection(link: anuncio.link,)

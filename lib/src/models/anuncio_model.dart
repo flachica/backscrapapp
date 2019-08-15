@@ -5,6 +5,8 @@ class Anuncio {
   String _fecha_desde;
   String _fecha_hasta;
   String _link;
+  String _identificador;
+  String _contenido;
   List<String> _tags;
 
   Anuncio(anuncio) {
@@ -14,6 +16,8 @@ class Anuncio {
     _fecha_desde = anuncio['fecha_desde'];
     _fecha_hasta = anuncio['fecha_hasta'];
     _link = anuncio['link'];
+    _identificador = anuncio['identificador'];
+    _contenido = anuncio['contenido'];
     _tags = [anuncio['pestana']];
   }
 
@@ -23,5 +27,7 @@ class Anuncio {
   String get fecha_desde => _fecha_desde;
   String get fecha_hasta => _fecha_hasta;
   String get link => _link;
+  String get identificador => _identificador;
+  String get contenido => _contenido;
   List<String> get tags => _tags;
 }

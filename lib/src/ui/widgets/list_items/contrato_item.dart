@@ -18,7 +18,8 @@ class ContratoItem extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              OneColumnSection(title: 'Fecha', text: contrato.fecha_hasta,),
+              OneColumnSection(title: 'Identificador', text: contrato.identificador,),
+              TwoColumnSection(title: 'Fecha', firstText: contrato.fecha_hasta, secondText: contrato.procedimiento,),
               TwoColumnSection(title: 'Expediente', firstText: contrato.expediente, secondText: contrato.estadoexpediente,),
               OneColumnSection(title: 'Descripción', text: contrato.descripcion,),
               OneColumnSection(title: 'Precio', text: contrato.precio,),

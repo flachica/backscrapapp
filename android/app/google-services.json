@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "26962729983",
+    "firebase_url": "https://backscrapapp.firebaseio.com",
+    "project_id": "backscrapapp",
+    "storage_bucket": "backscrapapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26962729983:android:27a540cd164f2448",
+        "android_client_info": {
+          "package_name": "com.flachica.backscrapapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26962729983-p702l8uv1ofjsj93ou1n10qfqpc7uq6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG7gVNhBnBp9RzUY92zYCasAsW26SFdy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26962729983-p702l8uv1ofjsj93ou1n10qfqpc7uq6m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,6 +28,9 @@ dependencies:
   url_launcher: ^4.2.0+3
   rxdart: ^0.18.0
   shared_preferences: ^0.5.3
+  firebase_messaging: any
+  firebase_core: ^0.2.5
+  firebase_analytics: ^1.0.4
 
 dev_dependencies:
   flutter_test:

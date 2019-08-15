@@ -13,7 +13,7 @@ class IlustratingRoute extends StatefulWidget {
 
   IlustratingRoute(BuildContext context) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
-    this.data = arguments.data;
+    if (arguments != null) this.data = arguments.data;
   }
 
   @override

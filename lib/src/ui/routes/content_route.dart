@@ -8,18 +8,21 @@ import 'package:backscrapapp/src/models/pestanaanuncio_model.dart';
 import 'package:backscrapapp/src/models/contrato_model.dart';
 import 'package:backscrapapp/src/models/anuncio_model.dart';
 import 'package:backscrapapp/src/ui/widgets/drawer_list.dart';
+import 'package:backscrapapp/src/resources/env.dart';
 
 class ContentRoute extends StatefulWidget {
   static const routeName = '/content';
 
   String show;
   AllDataModel data;
+  Env env;
 
-  ContentRoute(BuildContext context) {
+  ContentRoute(BuildContext context, Env env) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
     if (arguments.data != null) data = arguments.data;
     this.show = arguments.show;
     if (this.show == null) this.show = CONTRATANTE_SHOW;
+    this.env = env;
   }
 
   @override
@@ -198,7 +201,7 @@ class ContentRouteState extends State<ContentRoute> {
         body: TabBarView(
             children: contentTabs
         ),
-        drawer: DrawerApp(data: widget.data,),
+        drawer: DrawerApp(data: widget.data, env: widget.env,),
       ),
     );
   }

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:backscrapapp/src/ui/navigations/router.dart';
 import 'package:backscrapapp/src/models/alldata_model.dart';
-import 'package:backscrapapp/src/resources/repository.dart';
 import 'package:backscrapapp/src/ui/skeletons/main_skeleton.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
+import 'package:backscrapapp/src/resources/env.dart';
 
 class InitialRoute extends StatefulWidget {
   static const routeName = '/';
+  Env env;
+
+  InitialRoute(Env env) {
+    this.env = env;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -27,9 +31,9 @@ class InitialState extends State<InitialRoute> {
   _loadIlustratingViewed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _ilustratingViewed = (prefs.getBool('ilustratingViewed') ?? false);
+      _ilustratingViewed = (prefs.getBool(ILUSTRATING_VIEWED) ?? false);
       if (!_ilustratingViewed) {
-        Router.gotoIlustrating(context, null);
+        widget.env.router.gotoIlustrating(context, null);
       } else {
         _loadAndShowContent();
       }
@@ -37,10 +41,10 @@ class InitialState extends State<InitialRoute> {
   }
 
   _loadAndShowContent() async {
-    AllDataModel data = await Repository().getAllData();
-    Router.gotoContent(
+    AllDataModel data = await widget.env.repository.getAllData();
+    widget.env..router.gotoContent(
         context,
-        RouteArguments(show: 'contratante', data: data)
+        RouteArguments(show: CONTRATANTE_SHOW, data: data)
     );
   }
 

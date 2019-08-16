@@ -4,16 +4,20 @@ import 'package:backscrapapp/src/blocs/data_bloc.dart';
 import 'package:backscrapapp/src/models/alldata_model.dart';
 import 'package:backscrapapp/src/ui/widgets/labeled_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:backscrapapp/src/ui/navigations/router.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
+import 'package:backscrapapp/src/resources/env.dart';
 
 class IlustratingRoute extends StatefulWidget {
   static const routeName = '/ilustrating';
   AllDataModel data;
+  DataBloc bloc;
+  Env env;
 
-  IlustratingRoute(BuildContext context) {
+  IlustratingRoute(BuildContext context, Env env) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
     if (arguments != null) this.data = arguments.data;
+    this.bloc = DataBloc(arguments.env);
+    this.env = env;
   }
 
   @override
@@ -27,14 +31,14 @@ class IlustratingState extends State<IlustratingRoute> {
   void initState() {
     super.initState();
     if (widget.data == null) {
-      bloc.fetchPestanaAnuncios();
+      widget.bloc.fetchPestanaAnuncios();
     }
   }
 
   @override
   void dispose() {
     if (widget.data == null) {
-      bloc.dispose();
+      widget.bloc.dispose();
     }
     super.dispose();
   }
@@ -44,7 +48,7 @@ class IlustratingState extends State<IlustratingRoute> {
     if (widget.data == null) {
       return MainSkeleton(
           body: StreamBuilder(
-              stream: bloc.fetchAllData,
+              stream: widget.bloc.fetchAllData,
               builder: (context, AsyncSnapshot<AllDataModel> snapshot) {
                 bool loading = true;
 
@@ -54,7 +58,7 @@ class IlustratingState extends State<IlustratingRoute> {
 
                 return DefaultTabController(
                   length: 3,
-                  child: IlustratingPager(loading: loading, data: snapshot.data),
+                  child: IlustratingPager(loading: loading, data: snapshot.data, env: widget.env,),
                 );
               }),
           appBar: AppBar(
@@ -65,7 +69,7 @@ class IlustratingState extends State<IlustratingRoute> {
       return MainSkeleton(
           body: DefaultTabController(
             length: 3,
-            child: IlustratingPager(loading: false, data: widget.data),
+            child: IlustratingPager(loading: false, data: widget.data, env: widget.env,),
           ),
           appBar: AppBar(
             title: Text('Backscrap'),
@@ -78,8 +82,9 @@ class IlustratingState extends State<IlustratingRoute> {
 class IlustratingPager extends StatefulWidget {
   bool loading;
   dynamic data;
+  Env env;
 
-  IlustratingPager({this.loading, this.data});
+  IlustratingPager({this.loading, this.data, this.env});
 
   @override
   State<StatefulWidget> createState() {
@@ -98,7 +103,7 @@ class _IlustratingPagerState extends State<IlustratingPager> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setBool('ilustratingViewed', true);
-      Router.gotoContent(context, RouteArguments(show: 'contratante', data: widget.data));
+      widget.env.router.gotoContent(context, RouteArguments(show: 'contratante', data: widget.data));
     });
   }
 

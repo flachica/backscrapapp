@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:backscrapapp/src/ui/navigations/router.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:backscrapapp/src/resources/repository.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
+import 'package:backscrapapp/src/resources/env.dart';
 
 class App extends StatefulWidget {
+  final Env env;
+
+  App({this.env});
+
   @override
   AppState createState() => new AppState();
 }
@@ -18,12 +21,13 @@ class AppState extends State<App> {
       'registration_id': token,
       'type': 'android'
     };
-    return Repository().postData(DEVICE_URL_SUFIX, data);
+    return widget.env.repository.postData(DEVICE_URL_SUFIX, data);
   }
 
   @override
   void initState() {
-    print('Inicialización');
+    String url = widget.env.apiURL;
+    print('Inicialización. URL: $url');
     super.initState();
 
     _firebaseMessaging.configure(
@@ -51,7 +55,7 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        routes: Router.routes,
+        routes: widget.env.router.getRoutes(),
     );
   }
 }

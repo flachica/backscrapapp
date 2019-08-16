@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:backscrapapp/src/resources/env.dart';
 
 const String CONTRATANTE_SHOW = 'contratante';
 const String ANUNCIOS_SHOW = 'anuncios';
-const String PRODUCTION_API_URL = 'https://backscrap.herokuapp.com/';
-const String DEVELOPMENT_API_URL = 'http://192.168.1.131:8000/';
 const String DEVICE_URL_SUFIX = 'devices/';
 const String SCRAPED_URL_SUFIX = 'scraped/';
-const bool IS_PRODUCTION = bool.fromEnvironment('dart.vm.product');
+const String ILUSTRATING_VIEWED = 'ilustratingViewed';
 
 class RouteArguments {
   final String show;
   final dynamic data;
+  final Env env;
 
-  RouteArguments({this.show, this.data});
+  RouteArguments({this.show, this.data, this.env});
 }
 
 class Tools {
-  static String getApiURL() {
-    if (IS_PRODUCTION) {
-      return PRODUCTION_API_URL;
-    } else {
-      return DEVELOPMENT_API_URL;
-    }
-  }
-
   List<Icon> _listContratosIcons = [
     Icon(FontAwesomeIcons.conciergeBell),
     Icon(FontAwesomeIcons.lightbulb),

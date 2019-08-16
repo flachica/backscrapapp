@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
-import 'package:backscrapapp/src/ui/navigations/router.dart';
+import 'package:backscrapapp/src/resources/env.dart';
 
 class DrawerApp extends StatelessWidget {
   dynamic data;
+  Env env;
 
-  DrawerApp({this.data});
+  DrawerApp({this.data, this.env});
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +24,25 @@ class DrawerApp extends StatelessWidget {
               title: Text('Contratos'),
               onTap: () {
                 Navigator.pop(context);
-                Router.gotoContent(context, RouteArguments(show: CONTRATANTE_SHOW, data: this.data));
+                this.env.router.gotoContent(context, RouteArguments(show: CONTRATANTE_SHOW, data: this.data));
               }),
           ListTile(
               title: Text('Anuncios'),
               onTap: () {
                 Navigator.pop(context);
-                Router.gotoContent(context, RouteArguments(show: ANUNCIOS_SHOW, data: this.data));
+                this.env.router.gotoContent(context, RouteArguments(show: ANUNCIOS_SHOW, data: this.data));
               }),
           ListTile(
               title: Text('Ver intro'),
               onTap: () {
                 Navigator.pop(context);
-                Router.gotoIlustrating(context, RouteArguments(data: this.data));
+                this.env.router.gotoIlustrating(context, RouteArguments(data: this.data));
               }),
           ListTile(
               title: Text('Acerca de'),
               onTap: () {
                 Navigator.pop(context);
-                Router.gotoAboutus(context);
+                this.env.router.gotoAboutus(context);
               }),
         ],
       ),

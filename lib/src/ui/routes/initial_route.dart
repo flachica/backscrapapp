@@ -4,7 +4,7 @@ import 'package:backscrapapp/src/ui/navigations/router.dart';
 import 'package:backscrapapp/src/models/alldata_model.dart';
 import 'package:backscrapapp/src/resources/repository.dart';
 import 'package:backscrapapp/src/ui/skeletons/main_skeleton.dart';
-import 'package:backscrapapp/src/tools/metadata.dart';
+import 'package:backscrapapp/src/tools/tools.dart';
 
 class InitialRoute extends StatefulWidget {
   static const routeName = '/';

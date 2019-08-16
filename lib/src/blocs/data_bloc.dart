@@ -1,6 +1,6 @@
-import '../resources/repository.dart';
+import 'package:backscrapapp/src/resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
-import '../models/alldata_model.dart';
+import 'package:backscrapapp/src/models/alldata_model.dart';
 
 class DataBloc {
   final _repository = Repository();

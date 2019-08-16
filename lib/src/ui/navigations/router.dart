@@ -3,7 +3,7 @@ import 'package:backscrapapp/src/ui/routes/initial_route.dart';
 import 'package:backscrapapp/src/ui/routes/content_route.dart';
 import 'package:backscrapapp/src/ui/routes/ilustrating_route.dart';
 import 'package:backscrapapp/src/ui/routes/aboutus_route.dart';
-import 'package:backscrapapp/src/tools/metadata.dart';
+import 'package:backscrapapp/src/tools/tools.dart';
 
 class Router {
   static final routes = {

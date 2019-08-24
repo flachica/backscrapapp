@@ -15,8 +15,12 @@ class IlustratingRoute extends StatefulWidget {
 
   IlustratingRoute(BuildContext context, Env env) {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
-    if (arguments != null) this.data = arguments.data;
-    this.bloc = DataBloc(arguments.env);
+    if (arguments != null) {
+      this.data = arguments.data;
+      this.bloc = DataBloc(arguments.env);
+    } else {
+      this.bloc = DataBloc(env);
+    }
     this.env = env;
   }
 

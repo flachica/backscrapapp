@@ -3,17 +3,42 @@ import 'package:backscrapapp/src/models/contrato_model.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/item_sections/two_column_section.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/item_sections/one_column_section.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/item_sections/center_button_section.dart';
+import 'package:badges/badges.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class ContratoItem extends StatelessWidget {
   final Contrato contrato;
+  final onExpansionChanged;
 
-  ContratoItem({this.contrato});
+  ContratoItem({this.contrato, this.onExpansionChanged});
 
   @override
   Widget build(BuildContext context) {
-    return new ExpansionTile(
+    Widget titleWidget = Text(contrato.name);
+    if (this.contrato.unreaded) {
+      var icon = RotatedBox(
+        quarterTurns: 3,
+        child: Icon(
+          FontAwesomeIcons.tag,
+          color: Colors.grey,
+          size: 20,
+        ),
+      );
+      titleWidget = Badge(
+        badgeColor: Colors.transparent,
+        borderRadius: 20,
+        elevation: 0,
+        badgeContent: icon,
+        child: Padding(
+          padding: EdgeInsets.only(right: 15),
+          child: Text(contrato.name),
+        ),
+      );
+    }
+    return ExpansionTile(
         backgroundColor: Colors.white,
-        title: Text(contrato.name),
+        title: titleWidget,
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,6 +52,8 @@ class ContratoItem extends StatelessWidget {
               CenterButtonSection(link: contrato.link,)
             ],
           )
-        ]);
+        ],
+      onExpansionChanged: onExpansionChanged,
+    );
   }
 }

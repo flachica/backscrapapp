@@ -5,13 +5,20 @@ class PestanaContratante {
   List<Contrato> _contratos = [];
   int _index;
   int _cantidad;
+  int _nuevos = 0;
 
-  PestanaContratante(pestana) {
+  PestanaContratante(Map<String, dynamic> pestana, List<int> unreaded) {
     _nombre = pestana['nombre'];
     _index = pestana['index'];
     _cantidad = pestana['cantidad'];
 
     for (Map<String, dynamic>  contrato in pestana['items']) {
+      if (unreaded.contains(contrato['id'])) {
+        contrato['unreaded'] = true;
+        _nuevos += 1;
+      } else {
+        contrato['unreaded'] = false;
+      }
       _contratos.add(new Contrato(contrato));
     }
   }
@@ -26,6 +33,10 @@ class PestanaContratante {
   List<Contrato> get contratos => _contratos;
   int get index => _index;
   int get cantidad => _cantidad;
+  int get nuevos => _nuevos;
 
   set contratos (contratos) => this._contratos = contratos;
+  set nuevos (nuevos) {
+    this._nuevos = nuevos;
+  }
 }

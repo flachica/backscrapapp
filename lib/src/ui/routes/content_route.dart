@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
 import 'package:backscrapapp/src/ui/widgets/list_items/contrato_item.dart';
@@ -26,32 +27,76 @@ class ContentRoute extends StatefulWidget {
   }
 
   @override
-  ContentRouteState createState() => new ContentRouteState(show: this.show);
+  ContentRouteState createState() => new ContentRouteState();
 }
 
 class ContentRouteState extends State<ContentRoute> {
   bool _isSearching = false;
   Tools tools = new Tools();
-  String show;
-
+  
   TextEditingController _searchQuery;
   List<PestanaContratante> pestanaContratantes;
   List<PestanaAnuncios> pestanaAnuncios;
 
-  ContentRouteState({this.show});
+  ContentRouteState();
+
+  onMessage(message) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: ListTile(
+          title: Text(message['notification']['title']),
+          subtitle: Text(message['notification']['body']),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  onResume(message) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: ListTile(
+          title: Text(message['data']['title']),
+          subtitle: Text(message['data']['body']),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    ).then((value) {
+      widget.env.pendingReadpush = null;
+    });
+  }
 
   @override
   void initState() {
     _searchQuery = new TextEditingController();
     if (widget.data != null) {
-      if (show == null || show == CONTRATANTE_SHOW) {
+      if (widget.show == null || widget.show == CONTRATANTE_SHOW) {
         this.pestanaContratantes = widget.data.pestanaContratante;
-      } else if (show == ANUNCIOS_SHOW) {
+      } else if (widget.show == ANUNCIOS_SHOW) {
         this.pestanaAnuncios = widget.data.pestanaAnuncios;
       }
     }
-
+    widget.env.onMessage = this.onMessage;
+    widget.env.onResume = this.onResume;
     super.initState();
+
+    if (widget.env.pendingReadpush != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await this.onResume(widget.env.pendingReadpush);
+      });
+    }
   }
 
   Widget _buildSearchField() {
@@ -69,7 +114,7 @@ class ContentRouteState extends State<ContentRoute> {
   }
 
   void updateSearchQuery(String newQuery) {
-    if (show == CONTRATANTE_SHOW && widget.data.pestanaContratante != null) {
+    if (widget.show == CONTRATANTE_SHOW && widget.data.pestanaContratante != null) {
       this.pestanaContratantes = new List<PestanaContratante>();
       for (PestanaContratante pestanaContrato in widget.data.pestanaContratante) {
         List<Contrato> items = pestanaContrato.contratos.where((contrato) =>
@@ -82,7 +127,7 @@ class ContentRouteState extends State<ContentRoute> {
       }
     }
 
-    if (show == ANUNCIOS_SHOW && widget.data.pestanaAnuncios != null) {
+    if (widget.show == ANUNCIOS_SHOW && widget.data.pestanaAnuncios != null) {
       this.pestanaAnuncios = new List<PestanaAnuncios>();
       for (PestanaAnuncios pestanaAnuncio in widget.data.pestanaAnuncios) {
         List<Anuncio> items = pestanaAnuncio.anuncios.where((anuncio) => anuncio.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
@@ -104,7 +149,7 @@ class ContentRouteState extends State<ContentRoute> {
 
   Widget _buildTitle(BuildContext context) {
     var horizontalTitleAlignment = CrossAxisAlignment.start;
-
+    String title = 'La Rinconada';
     return new InkWell(
       child: new Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -112,7 +157,7 @@ class ContentRouteState extends State<ContentRoute> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
-            new Text('La Rinconada',
+            new Text(title,
               style: new TextStyle(color: Colors.white),),
           ],
         ),
@@ -165,21 +210,69 @@ class ContentRouteState extends State<ContentRoute> {
 
     if (this.pestanaContratantes != null && this.pestanaContratantes.length > 0) {
       for (PestanaContratante pestanaContratante in this.pestanaContratantes) {
-        tabs.add(Tab(icon: tools.iconContratoByIndex(pestanaContratante.index), text: pestanaContratante.nombre));
+        var subicon = tools.iconContratoByIndex(pestanaContratante.index);
+        Widget icon = subicon;
+        if (pestanaContratante.nuevos > 0)
+          icon = Badge(
+            badgeColor: Colors.red,
+            shape: BadgeShape.square,
+            borderRadius: 20,
+            elevation: 1,
+            badgeContent: Text(pestanaContratante.nuevos.toString(), style: TextStyle(color: Colors.white),),
+            child: subicon,
+          );
+
+        tabs.add(
+            Tab(icon: icon,
+                text: pestanaContratante.nombre)
+        );
         contentTabs.add(ListView.builder(
             itemCount: pestanaContratante.contratos.length,
             itemBuilder: (context, index) {
-              return ContratoItem(contrato: pestanaContratante.contratos[index]);
+              return ContratoItem(
+                contrato: pestanaContratante.contratos[index],
+                onExpansionChanged: (value) {
+                  if (pestanaContratante.contratos[index].unreaded) {
+                    widget.env.repository.deleteUnreadedContrato(pestanaContratante.contratos[index].id);
+                    pestanaContratante.nuevos = pestanaContratante.nuevos - 1;
+                    pestanaContratante.contratos[index].unreaded = false;
+                    setState(() {});
+                  }
+                },
+              );
             }
         ));
       }
     } else if (this.pestanaAnuncios != null && this.pestanaAnuncios.length > 0) {
       for (PestanaAnuncios pestanaAnuncios in this.pestanaAnuncios) {
-        tabs.add(Tab(icon: tools.iconAnuncioByIndex(pestanaAnuncios.index), text: pestanaAnuncios.nombre));
+        var subicon = tools.iconContratoByIndex(pestanaAnuncios.index);
+        Widget icon = subicon;
+        if (pestanaAnuncios.nuevos > 0)
+          icon = Badge(
+            badgeColor: Colors.red,
+            shape: BadgeShape.square,
+            borderRadius: 20,
+            elevation: 1,
+            badgeContent: Text(pestanaAnuncios.nuevos.toString(), style: TextStyle(color: Colors.white),),
+            child: subicon,
+          );
+        tabs.add(Tab(icon: icon,
+            text: pestanaAnuncios.nombre)
+        );
         contentTabs.add(ListView.builder(
             itemCount: pestanaAnuncios.anuncios.length,
             itemBuilder: (context, index) {
-              return AnuncioItem(anuncio: pestanaAnuncios.anuncios[index]);
+              return AnuncioItem(
+                  anuncio: pestanaAnuncios.anuncios[index],
+                onExpansionChanged: (value) {
+                  if (pestanaAnuncios.anuncios[index].unreaded) {
+                    widget.env.repository.deleteUnreadedContrato(pestanaAnuncios.anuncios[index].id);
+                    pestanaAnuncios.anuncios[index].unreaded = false;
+                    pestanaAnuncios.nuevos = pestanaAnuncios.nuevos - 1;
+                    setState(() {});
+                  }
+                }
+              );
             }
         ));
       }

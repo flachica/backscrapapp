@@ -13,6 +13,7 @@ class Contrato {
   String _link;
   String _identificador;
   List<String> _tags;
+  bool _unreaded;
 
   Contrato(contrato) {
     _id = contrato['id'];
@@ -29,6 +30,7 @@ class Contrato {
     _link = contrato['link'];
     _identificador = contrato['identificador'];
     _tags = [contrato['type']];
+    _unreaded = contrato['unreaded'];
   }
 
   int get id => _id;
@@ -45,4 +47,8 @@ class Contrato {
   String get link => _link;
   String get identificador => _identificador;
   List<String> get tags => _tags;
+  bool get unreaded => _unreaded;
+  set unreaded(bool unredad) {
+    this._unreaded = false;
+  }
 }

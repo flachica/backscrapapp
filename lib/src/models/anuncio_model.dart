@@ -8,6 +8,7 @@ class Anuncio {
   String _identificador;
   String _contenido;
   List<String> _tags;
+  bool _unreaded;
 
   Anuncio(anuncio) {
     _id = anuncio['id'];
@@ -19,6 +20,7 @@ class Anuncio {
     _identificador = anuncio['identificador'];
     _contenido = anuncio['contenido'];
     _tags = [anuncio['pestana']];
+    _unreaded = anuncio['unreaded'];
   }
 
   int get id => _id;
@@ -30,4 +32,8 @@ class Anuncio {
   String get identificador => _identificador;
   String get contenido => _contenido;
   List<String> get tags => _tags;
+  bool get unreaded => _unreaded;
+  set unreaded(bool unredad) {
+    this._unreaded = false;
+  }
 }

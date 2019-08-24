@@ -31,21 +31,26 @@ class AppState extends State<App> {
     super.initState();
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) {
+      onMessage: (Map<String, dynamic> message) async {
         print('FCM.onMessage message: $message');
-        return;
+        return widget.env.onMessage(message);
       },
-      onResume: (Map<String, dynamic> message) {
+      onResume: (Map<String, dynamic> message) async {
         print('FCM.onResume message: $message');
+        widget.env.onResume(message);
         return;
       },
-      onLaunch: (Map<String, dynamic> message) {
+      onLaunch: (Map<String, dynamic> message) async {
         print('FCM.onLaunch message: $message');
+        // Este evento sucede antes de pintar el primer frame en la App
+        // Por eso en el InitState hay que consultar esta variable
+        widget.env.pendingReadpush = message;
         return;
       },
     );
 
     _firebaseMessaging.getToken().then((token){
+      print('FCM Inicializado con el token: $token');
       _registerOnBackend(token).then((dynamic response) {
         print('Backscrap response: $response');
       });

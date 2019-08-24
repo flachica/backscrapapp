@@ -7,13 +7,17 @@ const String ANUNCIOS_SHOW = 'anuncios';
 const String DEVICE_URL_SUFIX = 'devices/';
 const String SCRAPED_URL_SUFIX = 'scraped/';
 const String ILUSTRATING_VIEWED = 'ilustratingViewed';
+const String LAST_ANUNCIO_REMOTE_CALLED = 'larc';
+const String LAST_CONTRATO_REMOTE_CALLED = 'lcrc';
 
 class RouteArguments {
   final String show;
   final dynamic data;
   final Env env;
+  final dynamic pushMessage;
+  final dynamic error;
 
-  RouteArguments({this.show, this.data, this.env});
+  RouteArguments({this.show, this.data, this.env, this.pushMessage, this.error});
 }
 
 class Tools {

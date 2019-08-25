@@ -41,8 +41,6 @@ class InitialState extends State<InitialRoute> {
 
   _loadAndShowContent() async {
     this.data = await widget.env.repository.getAllData();
-    await widget.env.repository.setLastAnuncio(this.data.lastAnuncio);
-    await widget.env.repository.setLastContrato(this.data.lastContrato);
     widget.env.router.gotoContent(
         context,
         RouteArguments(

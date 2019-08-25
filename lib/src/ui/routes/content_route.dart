@@ -1,3 +1,4 @@
+import 'package:backscrapapp/src/ui/routes/initial_route.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
@@ -41,41 +42,11 @@ class ContentRouteState extends State<ContentRoute> {
   ContentRouteState();
 
   onMessage(message) async {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: ListTile(
-          title: Text(message['notification']['title']),
-          subtitle: Text(message['notification']['body']),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Ok'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
+    widget.env.router.gotoRoute(context, InitialRoute.routeName, null);
   }
 
   onResume(message) async {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: ListTile(
-          title: Text(message['data']['title']),
-          subtitle: Text(message['data']['body']),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Ok'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    ).then((value) {
-      widget.env.pendingReadpush = null;
-    });
+    widget.env.router.gotoRoute(context, InitialRoute.routeName, null);
   }
 
   @override

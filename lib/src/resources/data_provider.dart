@@ -20,29 +20,39 @@ class DataProvider {
     final response = await client.get(this.apiURL + SCRAPED_URL_SUFIX);
     final List<int> unreadedAnuncios = await this.getUnreadedAnuncios();
     final List<int> unreadedContratos = await this.getUnreadedContratos();
+
     int lastAnuncioRemoteCalled = await this.getLastAnuncio();
     int lastContratoRemoteCalled = await this.getLastContrato();
+    print('Lista Anuncios No leídos anteriores: ' + unreadedAnuncios.toString());
+    print('Lista Contratos No leídos anteriores: ' + unreadedContratos.toString());
+    print('Anuncio local $lastAnuncioRemoteCalled Contrato local $lastContratoRemoteCalled');
 
     if (response.statusCode == 200) {
       var parsedJSON = json.decode(response.body)['result'];
       var _lastAnuncio = parsedJSON['uanuncio'];
       var _lastContrato = parsedJSON['ucontratantes'];
-
+      await this.setLastAnuncio(_lastAnuncio);
+      await this.setLastContrato(_lastContrato);
+      print('Anuncio remoto $_lastAnuncio Contrato remoto $_lastContrato');
       if (lastAnuncioRemoteCalled != null && lastAnuncioRemoteCalled != 0) {
-        for (var i = lastAnuncioRemoteCalled + 1; i < _lastAnuncio; i += 1) {
+        for (var i = lastAnuncioRemoteCalled + 1; i <= _lastAnuncio; i += 1) {
           unreadedAnuncios.add(i);
         }
-        for (var i = lastContratoRemoteCalled + 1; i < _lastContrato; i += 1) {
+        for (var i = lastContratoRemoteCalled + 1; i <= _lastContrato; i += 1) {
           unreadedContratos.add(i);
         }
+        await this.insertUnreadedAnuncios(unreadedAnuncios);
+        await this.insertUnreadedContratos(unreadedContratos);
       }
-      await this.insertUnreadedAnuncios(unreadedAnuncios);
-      await this.insertUnreadedContratos(unreadedContratos);
-      return AllDataModel.fromJSON(
+
+      var result = AllDataModel.fromJSON(
           parsedJSON,
           unreadedAnuncios,
           unreadedContratos,
       );
+      print('Lista Anuncios No leídos final: ' + unreadedAnuncios.toString());
+      print('Lista Contratos No leídos final: ' + unreadedContratos.toString());
+      return result;
     } else {
       throw Exception('Error al cargar datos desde Internet');
     }

@@ -5,10 +5,12 @@ import 'package:backscrapapp/src/resources/env.dart';
 const String CONTRATANTE_SHOW = 'contratante';
 const String ANUNCIOS_SHOW = 'anuncios';
 const String DEVICE_URL_SUFIX = 'devices/';
+const String DEVICE_UNREGISTER_URL_SUFIX = 'fcmmanagement/?action=delete&device=';
 const String SCRAPED_URL_SUFIX = 'scraped/';
 const String ILUSTRATING_VIEWED = 'ilustratingViewed';
 const String LAST_ANUNCIO_REMOTE_CALLED = 'larc';
 const String LAST_CONTRATO_REMOTE_CALLED = 'lcrc';
+const String BE_NOTIFIED = 'bn';
 
 class RouteArguments {
   final String show;

@@ -5,6 +5,7 @@ import 'package:backscrapapp/config/router.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Env {
   static Env value;
@@ -19,6 +20,8 @@ class Env {
   int local_ucontrato;
   Future<Database> _database;
   SharedPreferences prefs;
+  FirebaseMessaging firebaseMessaging;
+  String token;
 
   Env() {
     value = this;

@@ -21,6 +21,12 @@ class DrawerApp extends StatelessWidget {
             ),
           ),
           ListTile(
+              title: Text('Configuración'),
+              onTap: () {
+                Navigator.pop(context);
+                this.env.router.gotoSettings(context);
+              }),
+          ListTile(
               title: Text('Contratos'),
               onTap: () {
                 Navigator.pop(context);

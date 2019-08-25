@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:backscrapapp/src/tools/tools.dart';
 import 'package:backscrapapp/src/resources/env.dart';
 
 class App extends StatefulWidget {
@@ -13,24 +12,14 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-
-  Future<dynamic> _registerOnBackend(String token) async {
-    Map<String, String> data = {
-      'name': token,
-      'registration_id': token,
-      'type': 'android'
-    };
-    return widget.env.repository.postData(DEVICE_URL_SUFIX, data);
-  }
 
   @override
   void initState() {
     String url = widget.env.apiURL;
     print('Inicialización. URL: $url');
     super.initState();
-
-    _firebaseMessaging.configure(
+    widget.env.firebaseMessaging = new FirebaseMessaging();
+    widget.env.firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('FCM.onMessage message: $message');
         return widget.env.onMessage(message);
@@ -49,12 +38,21 @@ class AppState extends State<App> {
       },
     );
 
-    _firebaseMessaging.getToken().then((token){
+    widget.env.firebaseMessaging.getToken().then((token) {
       print('FCM Inicializado con el token: $token');
-      _registerOnBackend(token).then((dynamic response) {
-        print('Backscrap response: $response');
-      });
+      widget.env.token = token;
+      widget.env.repository.registerOnBackend(token);
     });
+
+    _loadFCMSettings();
+  }
+
+  _loadFCMSettings() async {
+    bool _beNotifiedAnuncios = await widget.env.repository.getBeNotified();
+    if (_beNotifiedAnuncios == null) {
+      await widget.env.repository.setBeNotified(true);
+      _beNotifiedAnuncios = true;
+    }
   }
 
   @override

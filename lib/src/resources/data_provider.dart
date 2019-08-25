@@ -67,7 +67,10 @@ class DataProvider {
       };
       return result;
     });
+  }
 
+  Future<dynamic> getData(String url) async {
+    return client.get(this.apiURL + url);
   }
 
   Future<List<int>> getUnreadedAnuncios() async {
@@ -155,5 +158,15 @@ class DataProvider {
   Future<void> setLastContrato(int contrato) async {
     final SharedPreferences prefs = await this.env.getPreferencesManager();
     prefs.setInt(LAST_CONTRATO_REMOTE_CALLED, contrato);
+  }
+
+  Future<bool> getBeNotified() async {
+    final SharedPreferences prefs = await this.env.getPreferencesManager();
+    return prefs.getBool(BE_NOTIFIED);
+  }
+
+  Future<void> setBeNotified(bool beNotified) async {
+    final SharedPreferences prefs = await this.env.getPreferencesManager();
+    prefs.setBool(BE_NOTIFIED, beNotified);
   }
 }

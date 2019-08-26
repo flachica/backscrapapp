@@ -21,6 +21,8 @@ class Repository {
   Future<void> setLastContrato(int contrato) => dataProvider.setLastContrato(contrato);
   Future<void> deleteUnreadedAnuncio(int anuncio) => dataProvider.deleteUnreadedAnuncio(anuncio);
   Future<void> deleteUnreadedContrato(int contrato) => dataProvider.deleteUnreadedContrato(contrato);
+  Future<void> deleteAllUnreadedAnuncio() => dataProvider.deleteAllUnreadedAnuncio();
+  Future<void> deleteAllUnreadedContrato() => dataProvider.deleteAllUnreadedContrato();
   Future<bool> getBeNotified() => dataProvider.getBeNotified();
   Future<void> setBeNotified(bool beNotified) => dataProvider.setBeNotified(beNotified);
   Future<dynamic> registerOnBackend(String token) async {

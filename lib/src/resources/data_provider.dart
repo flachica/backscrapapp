@@ -135,6 +135,16 @@ class DataProvider {
     );
   }
 
+  Future<void> deleteAllUnreadedAnuncio() async {
+    final Database db = await this.env.getDatabase();
+    await db.delete(UnReadedAnuncios.model);
+  }
+
+  Future<void> deleteAllUnreadedContrato() async {
+    final Database db = await this.env.getDatabase();
+    await db.delete(UnReadedContratos.model);
+  }
+
   Future<bool> getIlustratingViewed() async {
     final SharedPreferences prefs = await this.env.getPreferencesManager();
     return (prefs.getBool(ILUSTRATING_VIEWED) ?? false);

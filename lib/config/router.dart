@@ -48,4 +48,8 @@ class Router {
   gotoSettings(BuildContext context) {
     Navigator.pushNamed(context, SettingsRoute.routeName);
   }
+
+  gotoInitialRoute(BuildContext context) {
+    Navigator.pushNamed(context, InitialRoute.routeName);
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/ui/skeletons/main_skeleton.dart';
 import 'package:backscrapapp/src/resources/env.dart';
-import 'package:backscrapapp/src/tools/tools.dart';
 
 class SettingsRoute extends StatefulWidget {
   static const routeName = '/settings';
@@ -32,7 +31,15 @@ class SettingsState extends State<SettingsRoute> {
       widget.env.repository.setBeNotified(true);
       _beNotified = true;
     }
-    setState(() { });
+    setState(() {
+
+    });
+  }
+
+  _readAll() async {
+    await widget.env.repository.deleteAllUnreadedAnuncio();
+    await widget.env.repository.deleteAllUnreadedContrato();
+    widget.env.router.gotoInitialRoute(context);
   }
 
   @override
@@ -43,20 +50,31 @@ class SettingsState extends State<SettingsRoute> {
       contentWidget = [
         Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
-          child: Row(
+          child: Column(
             children: <Widget>[
-              Text('Recibir notificaciones'),
-              Spacer(),
-              Switch(
-                  value: _beNotified,
-                  onChanged: (bool value) {
-                    setState(() {
-                      widget.env.repository.setBeNotified(value);
-                      if (value) widget.env.repository.registerOnBackend(widget.env.token);
-                      else widget.env.repository.unRegisterOnBackend(widget.env.token);
-                      _beNotified = value;
-                    });
-                  }
+              Row(
+                children: <Widget>[
+                  Text('Recibir notificaciones'),
+                  Spacer(),
+                  Switch(
+                      value: _beNotified,
+                      onChanged: (bool value) {
+                        setState(() {
+                          widget.env.repository.setBeNotified(value);
+                          if (value) widget.env.repository.registerOnBackend(widget.env.token);
+                          else widget.env.repository.unRegisterOnBackend(widget.env.token);
+                          _beNotified = value;
+                        });
+                      }
+                  )
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Spacer(),
+                  RaisedButton(child: Text('Marcar todo leído'), textColor: Colors.white, color: Colors.blueAccent, onPressed: _readAll,),
+                  Spacer()
+                ],
               )
             ],
           ),

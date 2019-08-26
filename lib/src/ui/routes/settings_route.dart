@@ -28,7 +28,10 @@ class SettingsState extends State<SettingsRoute> {
 
   _loadBeNotified() async {
     _beNotified = await widget.env.repository.getBeNotified();
-    print('Be notified $_beNotified');
+    if (_beNotified == null) {
+      widget.env.repository.setBeNotified(true);
+      _beNotified = true;
+    }
     setState(() { });
   }
 

@@ -23,6 +23,7 @@ class Env {
   SharedPreferences prefs;
   FirebaseMessaging firebaseMessaging;
   String token;
+  bool withDebuggingOptions = false;
 
   Env() {
     value = this;

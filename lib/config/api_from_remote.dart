@@ -4,4 +4,5 @@ void main() => ApiFromRemote();
 
 class ApiFromRemote extends Env {
   final String apiURL = 'https://backscrap.herokuapp.com/';
+  bool withDebuggingOptions = false;
 }

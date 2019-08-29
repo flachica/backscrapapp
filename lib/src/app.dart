@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:backscrapapp/src/resources/env.dart';
+import 'package:catcher/catcher_plugin.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatefulWidget {
   final Env env;
@@ -58,7 +60,15 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorKey: Catcher.navigatorKey,
         routes: widget.env.router.getRoutes(),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('es'),
+        ],
     );
   }
 }

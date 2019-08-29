@@ -34,6 +34,9 @@ dependencies:
   sqflite:
   path:
   badges:
+  catcher: ^0.2.3
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

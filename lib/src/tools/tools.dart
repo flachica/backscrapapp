@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:backscrapapp/src/resources/env.dart';
+import 'package:catcher/catcher_plugin.dart';
 
 const String CONTRATANTE_SHOW = 'contratante';
 const String ANUNCIOS_SHOW = 'anuncios';
 const String DEVICE_URL_SUFIX = 'devices/';
-const String DEVICE_UNREGISTER_URL_SUFIX = 'fcmmanagement/?action=delete&device=';
+const String DEVICE_UNREGISTER_URL_SUFIX =
+    'fcmmanagement/?action=delete&device=';
 const String SCRAPED_URL_SUFIX = 'scraped/';
+const String ERROR_HANDLER_URL_SUFIX = 'error/';
 const String ILUSTRATING_VIEWED = 'ilustratingViewed';
 const String LAST_ANUNCIO_REMOTE_CALLED = 'larc';
 const String LAST_CONTRATO_REMOTE_CALLED = 'lcrc';
@@ -19,7 +22,8 @@ class RouteArguments {
   final dynamic pushMessage;
   final dynamic error;
 
-  RouteArguments({this.show, this.data, this.env, this.pushMessage, this.error});
+  RouteArguments(
+      {this.show, this.data, this.env, this.pushMessage, this.error});
 }
 
 class Tools {
@@ -40,7 +44,7 @@ class Tools {
     Icon(FontAwesomeIcons.newspaper),
   ];
 
-  Icon iconContratoByIndex (int index)  {
+  Icon iconContratoByIndex(int index) {
     if (index >= _listContratosIcons.length) {
       return Icon(FontAwesomeIcons.fileContract);
     } else {
@@ -48,11 +52,28 @@ class Tools {
     }
   }
 
-  Icon iconAnuncioByIndex (int index) {
+  Icon iconAnuncioByIndex(int index) {
     if (index >= _listAnunciosIcons.length) {
       return Icon(FontAwesomeIcons.newspaper);
     } else {
       return _listAnunciosIcons[index];
     }
+  }
+
+  static LocalizationOptions getLocalizationOptions() {
+    return LocalizationOptions("es",
+        notificationReportModeTitle: "Error de aplicación",
+        notificationReportModeContent:
+            "Haga clic aquí para enviar un informe de error al equipo de soporte.",
+        dialogReportModeTitle: "Error",
+        dialogReportModeDescription:
+            "Se ha producido un error inesperado en la aplicación. El informe de errores está listo para enviar al equipo de soporte. Haga clic en Aceptar para enviar el informe de errores o en Cancelar para cancelar el informe.",
+        dialogReportModeAccept: "Aceptar",
+        dialogReportModeCancel: "Cancelar",
+        pageReportModeTitle: "Error",
+        pageReportModeDescription:
+            "Se ha producido un error inesperado en la aplicación. El informe de errores está listo para enviar al equipo de soporte. Haga clic en Aceptar para enviar el informe de errores o en Cancelar para cancelar el informe.",
+        pageReportModeAccept: "Aceptar",
+        pageReportModeCancel: "Cancelar");
   }
 }

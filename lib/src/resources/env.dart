@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/app.dart';
 import 'package:backscrapapp/src/resources/repository.dart';
 import 'package:backscrapapp/config/router.dart';
+import 'package:backscrapapp/src/tools/tools.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:catcher/catcher_plugin.dart';
 
 class Env {
   static Env value;
@@ -28,7 +29,25 @@ class Env {
     this.router = Router(env: this);
     this.repository = Repository(this);
 
-    runApp(App(env: this));
+    ReportMode reportMode = PageReportMode(
+        showStackTrace: false,
+    );
+
+    LocalizationOptions lo = Tools.getLocalizationOptions();
+    CatcherOptions debugOptions = CatcherOptions(
+        reportMode,
+        [ConsoleHandler(),
+          HttpHandler(
+            HttpRequestType.post,
+            Uri.parse(this.apiURL + ERROR_HANDLER_URL_SUFIX),
+            printLogs: true,
+
+          )],
+      localizationOptions: [lo]
+    );
+
+    Catcher(App(env: this), debugConfig: debugOptions);
+    //runApp(App(env: this));
   }
 
   Future<Database> getDatabase() async {

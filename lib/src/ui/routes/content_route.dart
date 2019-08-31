@@ -68,6 +68,8 @@ class ContentRouteState extends State<ContentRoute> {
         await this.onResume(widget.env.pendingReadpush);
       });
     }
+    String routeName = ContentRoute.routeName;
+    widget.env.repository.sendAnalyticsEvent('route.$routeName', widget.env.deviceInfo);
   }
 
   Widget _buildSearchField() {

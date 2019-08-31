@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/ui/skeletons/main_skeleton.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:backscrapapp/src/resources/env.dart';
+
 
 class AboutusRoute extends StatelessWidget {
   static const routeName = '/aboutus';
+  Env env;
+
+  AboutusRoute(Env env) {
+    this.env = env;
+  }
 
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
+    this.env.repository.sendAnalyticsEvent('route.$routeName', env.deviceInfo);
 
     return MainSkeleton(
         body: Center(

@@ -37,6 +37,8 @@ class IlustratingState extends State<IlustratingRoute> {
     if (widget.data == null) {
       widget.bloc.fetchPestanaAnuncios();
     }
+    String routeName = IlustratingRoute.routeName;
+    widget.env.repository.sendAnalyticsEvent('route.$routeName', widget.env.deviceInfo);
   }
 
   @override

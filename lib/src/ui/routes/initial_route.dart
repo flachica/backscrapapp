@@ -26,6 +26,8 @@ class InitialState extends State<InitialRoute> {
   void initState() {
     super.initState();
     _loadIlustratingViewed();
+    String routeName = InitialRoute.routeName;
+    widget.env.repository.sendAnalyticsEvent('route.$routeName', widget.env.deviceInfo);
   }
 
   _loadIlustratingViewed() async {

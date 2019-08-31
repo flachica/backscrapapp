@@ -23,6 +23,8 @@ class SettingsState extends State<SettingsRoute> {
   void initState() {
     super.initState();
     _loadBeNotified();
+    String routeName = SettingsRoute.routeName;
+    widget.env.repository.sendAnalyticsEvent('route.$routeName', widget.env.deviceInfo);
   }
 
   _loadBeNotified() async {

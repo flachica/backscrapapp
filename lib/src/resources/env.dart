@@ -7,6 +7,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:catcher/catcher_plugin.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:device_info/device_info.dart';
 
 class Env {
   static Env value;
@@ -24,16 +26,19 @@ class Env {
   FirebaseMessaging firebaseMessaging;
   String token;
   bool withDebuggingOptions = false;
+  FirebaseAnalytics analytics;
+  AndroidDeviceInfo androidInfo;
+  Map<String, dynamic> deviceInfo;
 
   Env() {
     value = this;
+    this.analytics = FirebaseAnalytics();
     this.router = Router(env: this);
     this.repository = Repository(this);
 
     ReportMode reportMode = PageReportMode(
-        showStackTrace: false,
+        showStackTrace: true,
     );
-
     LocalizationOptions lo = Tools.getLocalizationOptions();
     CatcherOptions debugOptions = CatcherOptions(
         reportMode,

@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:backscrapapp/src/resources/env.dart';
 import 'package:catcher/catcher_plugin.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:device_info/device_info.dart';
 
 class App extends StatefulWidget {
   final Env env;
@@ -46,15 +47,23 @@ class AppState extends State<App> {
       widget.env.repository.registerOnBackend(token);
     });
 
-    _loadFCMSettings();
+    _loadAsyncSettings();
   }
 
-  _loadFCMSettings() async {
+  _loadAsyncSettings() async {
     bool _beNotifiedAnuncios = await widget.env.repository.getBeNotified();
     if (_beNotifiedAnuncios == null) {
       await widget.env.repository.setBeNotified(true);
       _beNotifiedAnuncios = true;
     }
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    widget.env.androidInfo = await deviceInfo.androidInfo;
+    widget.env.deviceInfo = <String, dynamic>{
+      'manufacturer': widget.env.androidInfo.manufacturer,
+      'model': widget.env.androidInfo.model,
+      'android': 'Android ' + widget.env.androidInfo.version.release + ' SDK ' + widget.env.androidInfo.version.sdkInt.toString() + ' PATCH ' + widget.env.androidInfo.version.securityPatch,
+    };
+    widget.env.repository.sendAnalyticsEvent('initialized', widget.env.deviceInfo);
   }
 
   @override
@@ -68,7 +77,7 @@ class AppState extends State<App> {
         ],
         supportedLocales: [
           const Locale('es'),
-        ],
+        ]
     );
   }
 }

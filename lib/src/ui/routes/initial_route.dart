@@ -46,7 +46,7 @@ class InitialState extends State<InitialRoute> {
     widget.env.router.gotoContent(
         context,
         RouteArguments(
-            show: CONTRATANTE_SHOW,
+            show: PUBLICCONTRACTS_SHOW,
             data: this.data
         )
     );

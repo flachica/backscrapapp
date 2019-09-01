@@ -39,8 +39,8 @@ class SettingsState extends State<SettingsRoute> {
   }
 
   _readAll() async {
-    await widget.env.repository.deleteAllUnreadedAnuncio();
-    await widget.env.repository.deleteAllUnreadedContrato();
+    await widget.env.repository.deleteAllUnreadedEdict();
+    await widget.env.repository.deleteAllUnreadedPublicContract();
     widget.env.router.gotoInitialRoute(context);
   }
 

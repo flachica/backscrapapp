@@ -1,41 +1,49 @@
-import 'package:backscrapapp/src/models/pestanaanuncio_model.dart';
-import 'package:backscrapapp/src/models/pestanacontratante_model.dart';
-import 'package:backscrapapp/src/models/anuncio_model.dart';
-import 'package:backscrapapp/src/models/contrato_model.dart';
-
+import 'package:backscrapapp/src/models/tabedict_model.dart' show TabEdict;
+import 'package:backscrapapp/src/models/tabpubliccontract_model.dart'
+    show TabPublicContract;
+import 'package:backscrapapp/src/models/edict_model.dart';
+import 'package:backscrapapp/src/models/publiccontract_model.dart';
 
 class AllDataModel {
-  List<PestanaAnuncios> _pestanaAnuncios = [];
-  List<PestanaContratante> _pestanaContratante = [];
-  List<Anuncio> _anuncios = [];
-  List<Contrato> _contratos = [];
-  int _lastAnuncio;
-  int _lastContrato;
+  List<TabEdict> _tabEdicts = [];
+  List<TabPublicContract> _tabPublicContracts = [];
+  List<Edict> _edicts = [];
+  List<PublicContract> _publicContracts = [];
+  int _lastEdict;
+  int _lastPublicContract;
 
-  AllDataModel(): super();
+  AllDataModel() : super();
 
-  AllDataModel.fromJSON(Map<String, dynamic> parsedJSON, List<int> unreadedAnuncios, List<int> unreadedContratos) {
-    for (Map<String, dynamic> item in parsedJSON['anuncios']) {
-      PestanaAnuncios _pestanaAnuncio = new PestanaAnuncios(item, unreadedAnuncios);
-      _pestanaAnuncios.add(_pestanaAnuncio);
-      for (Anuncio _anuncio in _pestanaAnuncio.anuncios) {
-        _anuncios.add(_anuncio);
+  AllDataModel.fromJSON(Map<String, dynamic> parsedJSON,
+      List<int> unreadedEdicts, List<int> unreadedPublicContracts) {
+    for (Map<String, dynamic> item in parsedJSON['edicts']) {
+      TabEdict _tabEdict = new TabEdict(item, unreadedEdicts);
+      _tabEdicts.add(_tabEdict);
+      for (Edict _edict in _tabEdict.edicts) {
+        _edicts.add(_edict);
       }
     }
 
-    for (Map<String, dynamic> item in parsedJSON['contratantes']) {
-      PestanaContratante _pestanaContrato = new PestanaContratante(item, unreadedContratos);
-      _pestanaContratante.add(_pestanaContrato);
-      for (Contrato _contrato in _pestanaContrato.contratos) {
-        _contratos.add(_contrato);
+    for (Map<String, dynamic> item in parsedJSON['publiccontracts']) {
+      TabPublicContract _typePublicContract =
+          new TabPublicContract(item, unreadedPublicContracts);
+      _tabPublicContracts.add(_typePublicContract);
+      for (PublicContract _publicContract
+          in _typePublicContract.publicContracts) {
+        _publicContracts.add(_publicContract);
       }
     }
   }
 
-  List<PestanaAnuncios> get pestanaAnuncios => _pestanaAnuncios;
-  List<PestanaContratante> get pestanaContratante => _pestanaContratante;
-  List<Anuncio> get anuncios => _anuncios;
-  List<Contrato> get contratos => _contratos;
-  int get lastAnuncio => _lastAnuncio;
-  int get lastContrato => _lastContrato;
+  List<TabEdict> get tabEdicts => _tabEdicts;
+
+  List<TabPublicContract> get tabPublicContracts => _tabPublicContracts;
+
+  List<Edict> get edicts => _edicts;
+
+  List<PublicContract> get publicContracts => _publicContracts;
+
+  int get lastEdict => _lastEdict;
+
+  int get lastPublicContract => _lastPublicContract;
 }

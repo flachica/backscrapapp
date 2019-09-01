@@ -3,16 +3,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:backscrapapp/src/resources/env.dart';
 import 'package:catcher/catcher_plugin.dart';
 
-const String CONTRATANTE_SHOW = 'contratante';
-const String ANUNCIOS_SHOW = 'anuncios';
+const String PUBLICCONTRACTS_SHOW = 'publiccontract';
+const String EDICTS_SHOW = 'edicts';
 const String DEVICE_URL_SUFIX = 'devices/';
 const String DEVICE_UNREGISTER_URL_SUFIX =
     'fcmmanagement/?action=delete&device=';
 const String SCRAPED_URL_SUFIX = 'scraped/';
 const String ERROR_HANDLER_URL_SUFIX = 'error/';
 const String ILUSTRATING_VIEWED = 'ilustratingViewed';
-const String LAST_ANUNCIO_REMOTE_CALLED = 'larc';
-const String LAST_CONTRATO_REMOTE_CALLED = 'lcrc';
+const String LAST_EDICT_REMOTE_CALLED = 'lerc';
+const String LAST_PUBLICCONTRACT_REMOTE_CALLED = 'lpcrc';
 const String BE_NOTIFIED = 'bn';
 
 class RouteArguments {
@@ -27,7 +27,7 @@ class RouteArguments {
 }
 
 class Tools {
-  List<Icon> _listContratosIcons = [
+  List<Icon> _listPublicContractsIcons = [
     Icon(FontAwesomeIcons.conciergeBell),
     Icon(FontAwesomeIcons.lightbulb),
     Icon(FontAwesomeIcons.fileContract),
@@ -37,26 +37,26 @@ class Tools {
     Icon(FontAwesomeIcons.wrench),
   ];
 
-  List<Icon> _listAnunciosIcons = [
+  List<Icon> _listEdictsIcons = [
     Icon(FontAwesomeIcons.userCog),
     Icon(FontAwesomeIcons.moneyCheck),
     Icon(FontAwesomeIcons.moneyBillWave),
     Icon(FontAwesomeIcons.newspaper),
   ];
 
-  Icon iconContratoByIndex(int index) {
-    if (index >= _listContratosIcons.length) {
+  Icon iconPublicContractByIndex(int index) {
+    if (index >= _listPublicContractsIcons.length) {
       return Icon(FontAwesomeIcons.fileContract);
     } else {
-      return _listContratosIcons[index];
+      return _listPublicContractsIcons[index];
     }
   }
 
-  Icon iconAnuncioByIndex(int index) {
-    if (index >= _listAnunciosIcons.length) {
+  Icon iconEdictByIndex(int index) {
+    if (index >= _listEdictsIcons.length) {
       return Icon(FontAwesomeIcons.newspaper);
     } else {
-      return _listAnunciosIcons[index];
+      return _listEdictsIcons[index];
     }
   }
 

@@ -19,7 +19,7 @@ class AppState extends State<App> {
   @override
   void initState() {
     String url = widget.env.apiURL;
-    print('Inicialización. URL: $url');
+    print('INIT. URL: $url');
     super.initState();
     widget.env.firebaseMessaging = new FirebaseMessaging();
     widget.env.firebaseMessaging.configure(
@@ -42,7 +42,7 @@ class AppState extends State<App> {
     );
 
     widget.env.firebaseMessaging.getToken().then((token) {
-      print('FCM Inicializado con el token: $token');
+      print('FCM Init with token: $token');
       widget.env.token = token;
       widget.env.repository.registerOnBackend(token);
     });
@@ -51,10 +51,10 @@ class AppState extends State<App> {
   }
 
   _loadAsyncSettings() async {
-    bool _beNotifiedAnuncios = await widget.env.repository.getBeNotified();
-    if (_beNotifiedAnuncios == null) {
+    bool _beNotifiedEdicts = await widget.env.repository.getBeNotified();
+    if (_beNotifiedEdicts == null) {
       await widget.env.repository.setBeNotified(true);
-      _beNotifiedAnuncios = true;
+      _beNotifiedEdicts = true;
     }
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     widget.env.androidInfo = await deviceInfo.androidInfo;

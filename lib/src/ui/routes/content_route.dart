@@ -2,13 +2,13 @@ import 'package:backscrapapp/src/ui/routes/initial_route.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
-import 'package:backscrapapp/src/ui/widgets/list_items/contrato_item.dart';
-import 'package:backscrapapp/src/ui/widgets/list_items/anuncio_item.dart';
+import 'package:backscrapapp/src/ui/widgets/list_items/publiccontract_item.dart';
+import 'package:backscrapapp/src/ui/widgets/list_items/edict_item.dart';
 import 'package:backscrapapp/src/models/alldata_model.dart';
-import 'package:backscrapapp/src/models/pestanacontratante_model.dart';
-import 'package:backscrapapp/src/models/pestanaanuncio_model.dart';
-import 'package:backscrapapp/src/models/contrato_model.dart';
-import 'package:backscrapapp/src/models/anuncio_model.dart';
+import 'package:backscrapapp/src/models/tabpubliccontract_model.dart' show TabPublicContract;
+import 'package:backscrapapp/src/models/tabedict_model.dart' show TabEdict;
+import 'package:backscrapapp/src/models/publiccontract_model.dart';
+import 'package:backscrapapp/src/models/edict_model.dart';
 import 'package:backscrapapp/src/ui/widgets/drawer_list.dart';
 import 'package:backscrapapp/src/resources/env.dart';
 
@@ -23,7 +23,7 @@ class ContentRoute extends StatefulWidget {
     RouteArguments arguments = ModalRoute.of(context).settings.arguments;
     if (arguments.data != null) data = arguments.data;
     this.show = arguments.show;
-    if (this.show == null) this.show = CONTRATANTE_SHOW;
+    if (this.show == null) this.show = PUBLICCONTRACTS_SHOW;
     this.env = env;
   }
 
@@ -36,8 +36,8 @@ class ContentRouteState extends State<ContentRoute> {
   Tools tools = new Tools();
   
   TextEditingController _searchQuery;
-  List<PestanaContratante> pestanaContratantes;
-  List<PestanaAnuncios> pestanaAnuncios;
+  List<TabPublicContract> tabPublicContracts;
+  List<TabEdict> tabEdicts;
 
   ContentRouteState();
 
@@ -53,10 +53,10 @@ class ContentRouteState extends State<ContentRoute> {
   void initState() {
     _searchQuery = new TextEditingController();
     if (widget.data != null) {
-      if (widget.show == null || widget.show == CONTRATANTE_SHOW) {
-        this.pestanaContratantes = widget.data.pestanaContratante;
-      } else if (widget.show == ANUNCIOS_SHOW) {
-        this.pestanaAnuncios = widget.data.pestanaAnuncios;
+      if (widget.show == null || widget.show == PUBLICCONTRACTS_SHOW) {
+        this.tabPublicContracts = widget.data.tabPublicContracts;
+      } else if (widget.show == EDICTS_SHOW) {
+        this.tabEdicts = widget.data.tabEdicts;
       }
     }
     widget.env.onMessage = this.onMessage;
@@ -87,26 +87,26 @@ class ContentRouteState extends State<ContentRoute> {
   }
 
   void updateSearchQuery(String newQuery) {
-    if (widget.show == CONTRATANTE_SHOW && widget.data.pestanaContratante != null) {
-      this.pestanaContratantes = new List<PestanaContratante>();
-      for (PestanaContratante pestanaContrato in widget.data.pestanaContratante) {
-        List<Contrato> items = pestanaContrato.contratos.where((contrato) =>
-            contrato.name.toUpperCase().contains(newQuery.toUpperCase()))
+    if (widget.show == PUBLICCONTRACTS_SHOW && widget.data.tabPublicContracts != null) {
+      this.tabPublicContracts = new List<TabPublicContract>();
+      for (TabPublicContract typePublicContract in widget.data.tabPublicContracts) {
+        List<PublicContract> items = typePublicContract.publicContracts.where((publicContract) =>
+            publicContract.name.toUpperCase().contains(newQuery.toUpperCase()))
             .toList();
-        PestanaContratante newContratante = new PestanaContratante.newPestana(
-            pestanaContrato.nombre, pestanaContrato.index, items.length);
-        newContratante.contratos = items;
-        this.pestanaContratantes.add(newContratante);
+        TabPublicContract newTabPublicContract = new TabPublicContract.newtype(
+            typePublicContract.name, typePublicContract.index, items.length);
+        newTabPublicContract.publicContracts = items;
+        this.tabPublicContracts.add(newTabPublicContract);
       }
     }
 
-    if (widget.show == ANUNCIOS_SHOW && widget.data.pestanaAnuncios != null) {
-      this.pestanaAnuncios = new List<PestanaAnuncios>();
-      for (PestanaAnuncios pestanaAnuncio in widget.data.pestanaAnuncios) {
-        List<Anuncio> items = pestanaAnuncio.anuncios.where((anuncio) => anuncio.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
-        PestanaAnuncios newAnuncio = new PestanaAnuncios.newPestana(pestanaAnuncio.nombre, pestanaAnuncio.index, pestanaAnuncio.cantidad);
-        newAnuncio.anuncios = items;
-        this.pestanaAnuncios.add(newAnuncio);
+    if (widget.show == EDICTS_SHOW && widget.data.tabEdicts != null) {
+      this.tabEdicts = new List<TabEdict>();
+      for (TabEdict tabEdict in widget.data.tabEdicts) {
+        List<Edict> items = tabEdict.edicts.where((edict) => edict.name.toUpperCase().contains(newQuery.toUpperCase())).toList();
+        TabEdict newEdict = new TabEdict.newtype(tabEdict.name, tabEdict.index, tabEdict.count);
+        newEdict.edicts = items;
+        this.tabEdicts.add(newEdict);
       }
     }
 
@@ -181,34 +181,34 @@ class ContentRouteState extends State<ContentRoute> {
     List<Tab> tabs = new List<Tab>();
     List<Widget> contentTabs = new List<Widget>();
 
-    if (this.pestanaContratantes != null && this.pestanaContratantes.length > 0) {
-      for (PestanaContratante pestanaContratante in this.pestanaContratantes) {
-        var subicon = tools.iconContratoByIndex(pestanaContratante.index);
+    if (this.tabPublicContracts != null && this.tabPublicContracts.length > 0) {
+      for (TabPublicContract tabPublicContract in this.tabPublicContracts) {
+        var subicon = tools.iconPublicContractByIndex(tabPublicContract.index);
         Widget icon = subicon;
-        if (pestanaContratante.nuevos > 0)
+        if (tabPublicContract.fresh > 0)
           icon = Badge(
             badgeColor: Colors.red,
             shape: BadgeShape.square,
             borderRadius: 20,
             elevation: 1,
-            badgeContent: Text(pestanaContratante.nuevos.toString(), style: TextStyle(color: Colors.white),),
+            badgeContent: Text(tabPublicContract.fresh.toString(), style: TextStyle(color: Colors.white),),
             child: subicon,
           );
 
         tabs.add(
             Tab(icon: icon,
-                text: pestanaContratante.nombre)
+                text: tabPublicContract.name)
         );
         contentTabs.add(ListView.builder(
-            itemCount: pestanaContratante.contratos.length,
+            itemCount: tabPublicContract.publicContracts.length,
             itemBuilder: (context, index) {
-              return ContratoItem(
-                contrato: pestanaContratante.contratos[index],
+              return PublicContractItem(
+                publicContract: tabPublicContract.publicContracts[index],
                 onExpansionChanged: (value) {
-                  if (pestanaContratante.contratos[index].unreaded) {
-                    widget.env.repository.deleteUnreadedContrato(pestanaContratante.contratos[index].id);
-                    pestanaContratante.nuevos = pestanaContratante.nuevos - 1;
-                    pestanaContratante.contratos[index].unreaded = false;
+                  if (tabPublicContract.publicContracts[index].unreaded) {
+                    widget.env.repository.deleteUnreadedPublicContract(tabPublicContract.publicContracts[index].id);
+                    tabPublicContract.fresh = tabPublicContract.fresh - 1;
+                    tabPublicContract.publicContracts[index].unreaded = false;
                     setState(() {});
                   }
                 },
@@ -216,32 +216,32 @@ class ContentRouteState extends State<ContentRoute> {
             }
         ));
       }
-    } else if (this.pestanaAnuncios != null && this.pestanaAnuncios.length > 0) {
-      for (PestanaAnuncios pestanaAnuncios in this.pestanaAnuncios) {
-        var subicon = tools.iconContratoByIndex(pestanaAnuncios.index);
+    } else if (this.tabEdicts != null && this.tabEdicts.length > 0) {
+      for (TabEdict tabEdict in this.tabEdicts) {
+        var subicon = tools.iconPublicContractByIndex(tabEdict.index);
         Widget icon = subicon;
-        if (pestanaAnuncios.nuevos > 0)
+        if (tabEdict.fresh > 0)
           icon = Badge(
             badgeColor: Colors.red,
             shape: BadgeShape.square,
             borderRadius: 20,
             elevation: 1,
-            badgeContent: Text(pestanaAnuncios.nuevos.toString(), style: TextStyle(color: Colors.white),),
+            badgeContent: Text(tabEdict.fresh.toString(), style: TextStyle(color: Colors.white),),
             child: subicon,
           );
         tabs.add(Tab(icon: icon,
-            text: pestanaAnuncios.nombre)
+            text: tabEdict.name)
         );
         contentTabs.add(ListView.builder(
-            itemCount: pestanaAnuncios.anuncios.length,
+            itemCount: tabEdict.edicts.length,
             itemBuilder: (context, index) {
-              return AnuncioItem(
-                  anuncio: pestanaAnuncios.anuncios[index],
+              return EdictItem(
+                  edict: tabEdict.edicts[index],
                 onExpansionChanged: (value) {
-                  if (pestanaAnuncios.anuncios[index].unreaded) {
-                    widget.env.repository.deleteUnreadedContrato(pestanaAnuncios.anuncios[index].id);
-                    pestanaAnuncios.anuncios[index].unreaded = false;
-                    pestanaAnuncios.nuevos = pestanaAnuncios.nuevos - 1;
+                  if (tabEdict.edicts[index].unreaded) {
+                    widget.env.repository.deleteUnreadedPublicContract(tabEdict.edicts[index].id);
+                    tabEdict.edicts[index].unreaded = false;
+                    tabEdict.fresh = tabEdict.fresh - 1;
                     setState(() {});
                   }
                 }

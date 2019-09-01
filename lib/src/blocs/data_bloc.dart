@@ -12,7 +12,7 @@ class DataBloc {
 
   Observable<AllDataModel> get fetchAllData => _dataFetcher.stream;
 
-  fetchPestanaAnuncios() async {
+  fetchTabEdict() async {
     _dataFetcher.sink.add(await this.env.repository.getAllData());
   }
 

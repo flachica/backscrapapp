@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:backscrapapp/src/models/unreadedanuncios_model.dart';
-import 'package:backscrapapp/src/models/unreadedcontratos_model.dart';
-import 'package:http/http.dart' show Client;
 import 'dart:convert';
+import 'package:backscrapapp/src/models/edictunreaded_model.dart';
+import 'package:backscrapapp/src/models/publiccontractunreaded_model.dart';
+import 'package:http/http.dart' show Client;
 import 'package:backscrapapp/src/models/alldata_model.dart';
 import 'package:backscrapapp/src/tools/tools.dart';
 import 'package:backscrapapp/src/resources/env.dart';
@@ -14,44 +14,52 @@ class DataProvider {
   Env env;
 
   DataProvider({this.apiURL, this.env});
+
   Client client = Client();
 
   Future<AllDataModel> getAllData() async {
     final response = await client.get(this.apiURL + SCRAPED_URL_SUFIX);
-    final List<int> unreadedAnuncios = await this.getUnreadedAnuncios();
-    final List<int> unreadedContratos = await this.getUnreadedContratos();
+    final List<int> unreadedEdicts = await this.getUnreadedEdicts();
+    final List<int> unreadedPublicContracts =
+        await this.getUnreadedPublicContracts();
 
-    int lastAnuncioRemoteCalled = await this.getLastAnuncio();
-    int lastContratoRemoteCalled = await this.getLastContrato();
-    print('Lista Anuncios No leídos anteriores: ' + unreadedAnuncios.toString());
-    print('Lista Contratos No leídos anteriores: ' + unreadedContratos.toString());
-    print('Anuncio local $lastAnuncioRemoteCalled Contrato local $lastContratoRemoteCalled');
+    int lastEdictRemoteCalled = await this.getLastEdict();
+    int lastPublicContractRemoteCalled = await this.getLastPublicContract();
+    print('Edicts unreaded before: ' + unreadedEdicts.toString());
+    print('PublicContracts unreaded before: ' +
+        unreadedPublicContracts.toString());
+    print(
+        'Edict local $lastEdictRemoteCalled PublicContract local $lastPublicContractRemoteCalled');
 
     if (response.statusCode == 200) {
       var parsedJSON = json.decode(response.body)['result'];
-      var _lastAnuncio = parsedJSON['uanuncio'];
-      var _lastContrato = parsedJSON['ucontratantes'];
-      await this.setLastAnuncio(_lastAnuncio);
-      await this.setLastContrato(_lastContrato);
-      print('Anuncio remoto $_lastAnuncio Contrato remoto $_lastContrato');
-      if (lastAnuncioRemoteCalled != null && lastAnuncioRemoteCalled != 0) {
-        for (var i = lastAnuncioRemoteCalled + 1; i <= _lastAnuncio; i += 1) {
-          unreadedAnuncios.add(i);
+      var _lastEdict = parsedJSON['ledict'];
+      var _lastPublicContract = parsedJSON['lpubliccontract'];
+      await this.setLastEdict(_lastEdict);
+      await this.setLastPublicContract(_lastPublicContract);
+      print(
+          'Remote Edict $_lastEdict Remote PublicContract $_lastPublicContract');
+      if (lastEdictRemoteCalled != null && lastEdictRemoteCalled != 0) {
+        for (var i = lastEdictRemoteCalled + 1; i <= _lastEdict; i += 1) {
+          unreadedEdicts.add(i);
         }
-        for (var i = lastContratoRemoteCalled + 1; i <= _lastContrato; i += 1) {
-          unreadedContratos.add(i);
+        for (var i = lastPublicContractRemoteCalled + 1;
+            i <= _lastPublicContract;
+            i += 1) {
+          unreadedPublicContracts.add(i);
         }
-        await this.insertUnreadedAnuncios(unreadedAnuncios);
-        await this.insertUnreadedContratos(unreadedContratos);
+        await this.insertUnreadedEdicts(unreadedEdicts);
+        await this.insertUnreadedPublicContracts(unreadedPublicContracts);
       }
 
       var result = AllDataModel.fromJSON(
-          parsedJSON,
-          unreadedAnuncios,
-          unreadedContratos,
+        parsedJSON,
+        unreadedEdicts,
+        unreadedPublicContracts,
       );
-      print('Lista Anuncios No leídos final: ' + unreadedAnuncios.toString());
-      print('Lista Contratos No leídos final: ' + unreadedContratos.toString());
+      print('Edicts unreaded final: ' + unreadedEdicts.toString());
+      print('PublicContracts unreaded final: ' +
+          unreadedPublicContracts.toString());
       return result;
     } else {
       throw Exception('Error al cargar datos desde Internet');
@@ -73,76 +81,77 @@ class DataProvider {
     return client.get(this.apiURL + url);
   }
 
-  Future<List<int>> getUnreadedAnuncios() async {
+  Future<List<int>> getUnreadedEdicts() async {
     final Database db = await this.env.getDatabase();
-    List<Map<String, dynamic>> maps = await db.query(UnReadedAnuncios.model);
+    List<Map<String, dynamic>> maps = await db.query(UnReadedEdicts.model);
 
     return List.generate(maps.length, (i) {
       return maps[i]['id'];
     });
   }
 
-  Future<List<int>> getUnreadedContratos() async {
+  Future<List<int>> getUnreadedPublicContracts() async {
     final Database db = await this.env.getDatabase();
-    List<Map<String, dynamic>> maps = await db.query(UnReadedContratos.model);
+    List<Map<String, dynamic>> maps =
+        await db.query(UnReadedPublicContracts.model);
 
     return List.generate(maps.length, (i) {
       return maps[i]['id'];
     });
   }
 
-  Future<void> insertUnreadedAnuncios(List<int> anuncios) async {
+  Future<void> insertUnreadedEdicts(List<int> edicts) async {
     final Database db = await this.env.getDatabase();
 
-    for (int anuncio in anuncios) {
+    for (int edict in edicts) {
       await db.insert(
-        UnReadedAnuncios.model,
-        {'id': anuncio},
+        UnReadedEdicts.model,
+        {'id': edict},
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
   }
 
-  Future<void> insertUnreadedContratos(List<int> contratos) async {
+  Future<void> insertUnreadedPublicContracts(List<int> publicContracts) async {
     final Database db = await this.env.getDatabase();
 
-    for (int contrato in contratos) {
+    for (int publicContract in publicContracts) {
       await db.insert(
-        UnReadedContratos.model,
-        {'id': contrato},
+        UnReadedPublicContracts.model,
+        {'id': publicContract},
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
   }
 
-  Future<void> deleteUnreadedAnuncio(int id) async {
+  Future<void> deleteUnreadedEdict(int id) async {
     final Database db = await this.env.getDatabase();
 
     await db.delete(
-      UnReadedAnuncios.model,
+      UnReadedEdicts.model,
       where: "id = ?",
       whereArgs: [id],
     );
   }
 
-  Future<void> deleteUnreadedContrato(int id) async {
+  Future<void> deleteUnreadedPublicContract(int id) async {
     final Database db = await this.env.getDatabase();
 
     await db.delete(
-      UnReadedContratos.model,
+      UnReadedPublicContracts.model,
       where: "id = ?",
       whereArgs: [id],
     );
   }
 
-  Future<void> deleteAllUnreadedAnuncio() async {
+  Future<void> deleteAllUnreadedEdict() async {
     final Database db = await this.env.getDatabase();
-    await db.delete(UnReadedAnuncios.model);
+    await db.delete(UnReadedEdicts.model);
   }
 
-  Future<void> deleteAllUnreadedContrato() async {
+  Future<void> deleteAllUnreadedPublicContract() async {
     final Database db = await this.env.getDatabase();
-    await db.delete(UnReadedContratos.model);
+    await db.delete(UnReadedPublicContracts.model);
   }
 
   Future<bool> getIlustratingViewed() async {
@@ -150,24 +159,24 @@ class DataProvider {
     return (prefs.getBool(ILUSTRATING_VIEWED) ?? false);
   }
 
-  Future<int> getLastAnuncio() async {
+  Future<int> getLastEdict() async {
     final SharedPreferences prefs = await this.env.getPreferencesManager();
-    return (prefs.getInt(LAST_ANUNCIO_REMOTE_CALLED) ?? 0);
+    return (prefs.getInt(LAST_EDICT_REMOTE_CALLED) ?? 0);
   }
 
-  Future<int> getLastContrato() async {
+  Future<int> getLastPublicContract() async {
     final SharedPreferences prefs = await this.env.getPreferencesManager();
-    return (prefs.getInt(LAST_CONTRATO_REMOTE_CALLED) ?? 0);
+    return (prefs.getInt(LAST_PUBLICCONTRACT_REMOTE_CALLED) ?? 0);
   }
 
-  Future<void> setLastAnuncio(int anuncio) async {
+  Future<void> setLastEdict(int edict) async {
     final SharedPreferences prefs = await this.env.getPreferencesManager();
-    prefs.setInt(LAST_ANUNCIO_REMOTE_CALLED, anuncio);
+    prefs.setInt(LAST_EDICT_REMOTE_CALLED, edict);
   }
 
-  Future<void> setLastContrato(int contrato) async {
+  Future<void> setLastPublicContract(int publicContract) async {
     final SharedPreferences prefs = await this.env.getPreferencesManager();
-    prefs.setInt(LAST_CONTRATO_REMOTE_CALLED, contrato);
+    prefs.setInt(LAST_PUBLICCONTRACT_REMOTE_CALLED, publicContract);
   }
 
   Future<bool> getBeNotified() async {

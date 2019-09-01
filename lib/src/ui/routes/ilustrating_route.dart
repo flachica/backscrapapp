@@ -35,7 +35,7 @@ class IlustratingState extends State<IlustratingRoute> {
   void initState() {
     super.initState();
     if (widget.data == null) {
-      widget.bloc.fetchPestanaAnuncios();
+      widget.bloc.fetchTabEdict();
     }
     String routeName = IlustratingRoute.routeName;
     widget.env.repository.sendAnalyticsEvent('route.$routeName', widget.env.deviceInfo);
@@ -109,7 +109,7 @@ class _IlustratingPagerState extends State<IlustratingPager> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setBool('ilustratingViewed', true);
-      widget.env.router.gotoContent(context, RouteArguments(show: 'contratante', data: widget.data));
+      widget.env.router.gotoContent(context, RouteArguments(show: PUBLICCONTRACTS_SHOW, data: widget.data));
     });
   }
 

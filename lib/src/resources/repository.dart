@@ -21,12 +21,12 @@ class Repository {
   Future<dynamic> postData(String url, dynamic data) => dataProvider.postData(url, data);
   Future<dynamic> getData(String url) => dataProvider.getData(url);
   Future<bool> getIlustratingViewed() => dataProvider.getIlustratingViewed();
-  Future<void> setLastAnuncio(int anuncio) => dataProvider.setLastAnuncio(anuncio);
-  Future<void> setLastContrato(int contrato) => dataProvider.setLastContrato(contrato);
-  Future<void> deleteUnreadedAnuncio(int anuncio) => dataProvider.deleteUnreadedAnuncio(anuncio);
-  Future<void> deleteUnreadedContrato(int contrato) => dataProvider.deleteUnreadedContrato(contrato);
-  Future<void> deleteAllUnreadedAnuncio() => dataProvider.deleteAllUnreadedAnuncio();
-  Future<void> deleteAllUnreadedContrato() => dataProvider.deleteAllUnreadedContrato();
+  Future<void> setLastEdict(int edict) => dataProvider.setLastEdict(edict);
+  Future<void> setLastPublicContract(int publicContract) => dataProvider.setLastPublicContract(publicContract);
+  Future<void> deleteUnreadedEdict(int edict) => dataProvider.deleteUnreadedEdict(edict);
+  Future<void> deleteUnreadedPublicContract(int publicContract) => dataProvider.deleteUnreadedPublicContract(publicContract);
+  Future<void> deleteAllUnreadedEdict() => dataProvider.deleteAllUnreadedEdict();
+  Future<void> deleteAllUnreadedPublicContract() => dataProvider.deleteAllUnreadedPublicContract();
   Future<bool> getBeNotified() => dataProvider.getBeNotified();
   Future<void> setBeNotified(bool beNotified) => dataProvider.setBeNotified(beNotified);
   Future<dynamic> registerOnBackend(String token) async {
@@ -47,6 +47,6 @@ class Repository {
       name: eventName,
       parameters: params,
     );
-    print('Evento $eventName con parametros $params enviado.');
+    print('Event $eventName with params $params sended.');
   }
 }

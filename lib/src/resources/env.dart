@@ -19,8 +19,8 @@ class Env {
   Function(Map<String, dynamic>) onMessage;
   Function(Map<String, dynamic>) onResume;
   dynamic pendingReadpush;
-  int local_uanuncio;
-  int local_ucontrato;
+  int local_ledict;
+  int local_lpublicContract;
   Future<Database> _database;
   SharedPreferences prefs;
   FirebaseMessaging firebaseMessaging;
@@ -59,13 +59,13 @@ class Env {
   Future<Database> getDatabase() async {
     if (this._database == null) {
       this._database = openDatabase(
-        join(await getDatabasesPath(), 'backscrapapp_database.db'),
+        join(await getDatabasesPath(), 'app_database.db'),
         onCreate: (db, version) {
           db.execute(
-            "CREATE TABLE unreaded_anuncios (id INTEGER PRIMARY KEY)",
+            "CREATE TABLE unreaded_edicts (id INTEGER PRIMARY KEY)",
           );
           db.execute(
-            "CREATE TABLE unreaded_contratos (id INTEGER PRIMARY KEY)",
+            "CREATE TABLE unreaded_publiccontracts (id INTEGER PRIMARY KEY)",
           );
         },
         version: 1,

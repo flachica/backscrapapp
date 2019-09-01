@@ -42,16 +42,16 @@ class DrawerApp extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                this.env.router.gotoContent(context, RouteArguments(show: CONTRATANTE_SHOW, data: this.data));
+                this.env.router.gotoContent(context, RouteArguments(show: PUBLICCONTRACTS_SHOW, data: this.data));
               }),
           ListTile(
               title: ConfigIcon(
-                  text: 'Anuncios',
+                  text: 'Anuncios/Edictos',
                   iconData: FontAwesomeIcons.newspaper
               ),
               onTap: () {
                 Navigator.pop(context);
-                this.env.router.gotoContent(context, RouteArguments(show: ANUNCIOS_SHOW, data: this.data));
+                this.env.router.gotoContent(context, RouteArguments(show: EDICTS_SHOW, data: this.data));
               }),
           ListTile(
               title: ConfigIcon(
